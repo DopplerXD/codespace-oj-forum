@@ -8,13 +8,13 @@ import java.util.Date;
 
 /**
  * @author: <a href="https://github.com/DopplerXD">doppleryxc</a>
- * @time: 2025/2/19 10:33
+ * @time: 2025/2/19 10:35
  */
 @Data
-public class UserVO implements Serializable {
+public class LoginUserVO implements Serializable {
 
     /**
-     * id
+     * 用户 id
      */
     private Long id;
 
@@ -42,6 +42,11 @@ public class UserVO implements Serializable {
      * 创建时间
      */
     private Date createTime;
+
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
 
     @Serial
     private static final long serialVersionUID = 1L;

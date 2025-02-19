@@ -1,23 +1,20 @@
 package site.dopplerxd.backend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 帖子
  *
- * @author: <a href="https://github.com/DopplerXD">doppleryxc</a>
- * @time: 2025/2/18 22:36
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+ * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName(value = "post")
+@Data
 public class Post implements Serializable {
 
     /**
@@ -72,6 +69,7 @@ public class Post implements Serializable {
     @TableLogic
     private Integer isDelete;
 
+    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

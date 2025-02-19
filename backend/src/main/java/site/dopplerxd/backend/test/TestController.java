@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author doppleryxc
  */
 @RestController
-@Tag(name = "用户接口")
+@Tag(name = "测试接口")
 @RequestMapping("/user")
 public class TestController {
 
