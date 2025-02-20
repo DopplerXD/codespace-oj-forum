@@ -13,6 +13,7 @@ import site.dopplerxd.backend.common.ErrorCode;
 import site.dopplerxd.backend.common.ResultUtils;
 import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.model.dto.user.UserLoginDto;
+import site.dopplerxd.backend.model.dto.user.UserRegisterDto;
 import site.dopplerxd.backend.service.UserService;
 
 import java.util.Map;
@@ -31,6 +32,21 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @PostMapping("/register")
+    public BaseResponse<String> userRegister(@RequestBody UserRegisterDto userRegisterDto, HttpServletRequest request) {
+        if (userRegisterDto == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        String userAccount = userRegisterDto.getUserAccount();
+        String userPassword = userRegisterDto.getUserPassword();
+        String checkPassword = userRegisterDto.getCheckPassword();
+        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        String result = userService.userRegister(userAccount, userPassword, checkPassword, request);
+        return ResultUtils.success(result);
+    }
+
     /**
      * 用户登录
      *
@@ -39,7 +55,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public BaseResponse<Map<String, Object>> login(@RequestBody UserLoginDto userLoginDto, HttpServletRequest request) {
+    public BaseResponse<Map<String, Object>> userLogin(@RequestBody UserLoginDto userLoginDto, HttpServletRequest request) {
         if (userLoginDto == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

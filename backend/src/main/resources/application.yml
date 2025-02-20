@@ -3,7 +3,7 @@ spring:
     name: backend
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/code_space
+    url: jdbc:mysql://localhost:3306/code_space?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
 server:
@@ -22,6 +22,9 @@ springdoc:
     - group: 'default'
       paths-to-match: '/**'
       packages-to-scan: site.dopplerxd.backend
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
 # knife4j的增强配置，不需要增强可以不配
 knife4j:
   enable: true
