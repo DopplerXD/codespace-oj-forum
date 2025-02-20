@@ -1,12 +1,8 @@
 package site.dopplerxd.backend.utils;
 
 import cn.hutool.jwt.JWT;
-import cn.hutool.jwt.JWTUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import site.dopplerxd.backend.model.dto.user.UserLoginDto;
-import site.dopplerxd.backend.model.entity.User;
-import site.dopplerxd.backend.model.vo.LoginUserVO;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -33,14 +29,14 @@ public class JwtUtils {
     /**
      * 根据登录信息生成Token
      *
-     * @param userAccount
-     * @param userPassword
+     * @param username
+     * @param password
      * @return
      */
-    public static String generateUserToken(Long id, String userAccount) {
+    public static String generateUserToken(String id, String username) {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
-        map.put("userAccount", userAccount);
+        map.put("username", username);
         return generateToken(map);
     }
 

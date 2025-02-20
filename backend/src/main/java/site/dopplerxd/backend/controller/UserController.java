@@ -37,13 +37,13 @@ public class UserController {
         if (userRegisterDto == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        String userAccount = userRegisterDto.getUserAccount();
-        String userPassword = userRegisterDto.getUserPassword();
+        String username = userRegisterDto.getUsername();
+        String password = userRegisterDto.getPassword();
         String checkPassword = userRegisterDto.getCheckPassword();
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
+        if (StringUtils.isAnyBlank(username, password, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        String result = userService.userRegister(userAccount, userPassword, checkPassword, request);
+        String result = userService.userRegister(username, password, checkPassword, request);
         return ResultUtils.success(result);
     }
 
@@ -59,12 +59,12 @@ public class UserController {
         if (userLoginDto == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        String userAccount = userLoginDto.getUserAccount();
-        String userPassword = userLoginDto.getUserPassword();
-        if (StringUtils.isAnyBlank(userAccount, userPassword)) {
+        String username = userLoginDto.getUsername();
+        String password = userLoginDto.getPassword();
+        if (StringUtils.isAnyBlank(username, password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        Map<String, Object> responseMap = userService.userLogin(userAccount, userPassword, request);
+        Map<String, Object> responseMap = userService.userLogin(username, password, request);
         return ResultUtils.success(responseMap);
     }
 }

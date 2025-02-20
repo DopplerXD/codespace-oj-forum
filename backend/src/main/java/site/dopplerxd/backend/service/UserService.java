@@ -8,33 +8,32 @@ import site.dopplerxd.backend.model.vo.LoginUserVO;
 import java.util.Map;
 
 /**
- * 用户服务
- *
- * @author: <a href="https://github.com/DopplerXD">doppleryxc</a>
- * @time: 2025/2/19 10:39
+ * @author doppleryxc
+ * @description 针对表【user】的数据库操作Service
+ * @createDate 2025-02-20 17:43:59
  */
 public interface UserService extends IService<User> {
 
     /**
      * 用户注册
      *
-     * @param userAccount
-     * @param userPassword
+     * @param username
+     * @param password
      * @param checkPassword
      * @param request
      * @return
      */
-    String userRegister(String userAccount, String userPassword, String checkPassword, HttpServletRequest request);
+    String userRegister(String username, String password, String checkPassword, HttpServletRequest request);
 
     /**
      * 用户登录
      *
-     * @param userAccount
-     * @param userPassword
+     * @param username
+     * @param password
      * @param request
      * @return
      */
-    Map<String, Object> userLogin(String userAccount, String userPassword, HttpServletRequest request);
+    Map<String, Object> userLogin(String username, String password, HttpServletRequest request);
 
     /**
      * 获取当前登录用户

@@ -46,10 +46,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if (StringUtils.isNotBlank(token) && JwtUtils.verify(token)) {
             try {
                 // 解析 JWT 中的用户账号
-                String userAccount = JWT.of(token).getPayload("userAccount").toString();
+                String username = JWT.of(token).getPayload("username").toString();
 
                 // 根据用户账号获取用户详细信息
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userAccount);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 // 创建认证令牌
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

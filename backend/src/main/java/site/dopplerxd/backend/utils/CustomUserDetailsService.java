@@ -20,19 +20,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     UserMapper userMapper;
 
     @Override
-    public UserDetails loadUserByUsername(String userAccount) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("username", username);
         User user = userMapper.selectOne(queryWrapper);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with user account: " + userAccount);
+            throw new UsernameNotFoundException("User not found with username: " + username);
         }
 
         // 创建并返回 UserDetails 对象
         return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUserAccount())
-                .password(user.getUserPassword())
-                .roles(user.getUserRole()) // 这里简单设置角色为 USER，可根据实际情况调整
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .roles(user.getRole()) // 这里简单设置角色为 USER，可根据实际情况调整
                 .build();
     }
 }

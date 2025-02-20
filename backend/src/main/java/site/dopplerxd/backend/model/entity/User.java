@@ -1,83 +1,128 @@
 package site.dopplerxd.backend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import lombok.Data;
 
 /**
- * 用户
- *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * 用户实体类
+ * 
+ * @author doppleryxc
+ * @TableName user
  */
-@TableName(value = "user")
+@TableName(value ="user")
 @Data
 public class User implements Serializable {
+    /**
+     * 
+     */
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    private String id;
 
     /**
-     * id
+     * 用户名（唯一）
      */
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+    @TableField(value = "username")
+    private String username;
 
     /**
-     * 用户账号
+     * 密码
      */
-    private String userAccount;
+    @TableField(value = "password")
+    private String password;
 
     /**
-     * 用户密码
+     * 昵称
      */
-    private String userPassword;
+    @TableField(value = "nickname")
+    private String nickname;
 
     /**
-     * 开放平台id
+     * 学校
      */
-    private String unionId;
+    @TableField(value = "school")
+    private String school;
 
     /**
-     * 公众号openId
+     * 性别
      */
-    private String mpOpenId;
+    @TableField(value = "gender")
+    private String gender;
 
     /**
-     * 用户昵称
+     * github地址
      */
-    private String userName;
+    @TableField(value = "github")
+    private String github;
 
     /**
-     * 用户头像
+     * 个人博客地址
      */
-    private String userAvatar;
+    @TableField(value = "blog")
+    private String blog;
 
     /**
-     * 用户简介
+     * cf的username
      */
-    private String userProfile;
+    @TableField(value = "cf_username")
+    private String cfUsername;
+
+    /**
+     * 邮箱
+     */
+    @TableField(value = "email")
+    private String email;
+
+    /**
+     * 头像地址
+     */
+    @TableField(value = "avatar")
+    private String avatar;
+
+    /**
+     * 个性签名
+     */
+    @TableField(value = "signature")
+    private String signature;
+
+    /**
+     * 头衔、称号
+     */
+    @TableField(value = "title_name")
+    private String titleName;
+
+    /**
+     * 头衔、称号的颜色
+     */
+    @TableField(value = "title_color")
+    private String titleColor;
 
     /**
      * 用户角色：user/admin/ban
      */
-    private String userRole;
+    @TableField(value = "role")
+    private String role;
+
+    /**
+     * 0可用，1不可用
+     */
+    @TableLogic
+    private Integer isDelete;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    @TableField(value = "gmt_create")
+    private Date gmtCreate;
 
     /**
-     * 更新时间
+     * 修改时间
      */
-    private Date updateTime;
-
-    /**
-     * 是否删除
-     */
-    @TableLogic
-    private Integer isDelete;
+    @TableField(value = "gmt_modified")
+    private Date gmtModified;
 
     @Serial
     @TableField(exist = false)

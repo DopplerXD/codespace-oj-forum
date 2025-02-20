@@ -24,7 +24,7 @@ springdoc:
       packages-to-scan: site.dopplerxd.backend
 mybatis-plus:
   configuration:
-    map-underscore-to-camel-case: false
+    map-underscore-to-camel-case: true # false表示关闭驼峰-下划线映射
 # knife4j的增强配置，不需要增强可以不配
 knife4j:
   enable: true

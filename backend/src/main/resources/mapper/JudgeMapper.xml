@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.dopplerxd.backend.mapper.JudgeMapper">
+
+    <resultMap id="BaseResultMap" type="site.dopplerxd.backend.model.entity.Judge">
+            <id property="submitId" column="submit_id" jdbcType="BIGINT"/>
+            <id property="pid" column="pid" jdbcType="BIGINT"/>
+            <id property="displayPid" column="display_pid" jdbcType="VARCHAR"/>
+            <id property="uid" column="uid" jdbcType="VARCHAR"/>
+            <id property="cid" column="cid" jdbcType="BIGINT"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="submitTime" column="submit_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="share" column="share" jdbcType="TINYINT"/>
+            <result property="errorMessage" column="error_message" jdbcType="VARCHAR"/>
+            <result property="time" column="time" jdbcType="INTEGER"/>
+            <result property="memory" column="memory" jdbcType="INTEGER"/>
+            <result property="score" column="score" jdbcType="INTEGER"/>
+            <result property="length" column="length" jdbcType="INTEGER"/>
+            <result property="code" column="code" jdbcType="VARCHAR"/>
+            <result property="language" column="language" jdbcType="VARCHAR"/>
+            <result property="cpid" column="cpid" jdbcType="BIGINT"/>
+            <result property="vjudgeSubmitId" column="vjudge_submit_id" jdbcType="BIGINT"/>
+            <result property="vjudgeUsername" column="vjudge_username" jdbcType="VARCHAR"/>
+            <result property="vjudgePassword" column="vjudge_password" jdbcType="VARCHAR"/>
+            <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+            <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+            <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        submit_id,pid,display_pid,
+        uid,cid,username,
+        submit_time,status,share,
+        error_message,time,memory,
+        score,length,code,
+        language,cpid,vjudge_submit_id,
+        vjudge_username,vjudge_password,is_delete,
+        gmt_create,gmt_modified
+    </sql>
+</mapper>

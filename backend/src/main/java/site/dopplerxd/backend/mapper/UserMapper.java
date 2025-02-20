@@ -1,13 +1,18 @@
 package site.dopplerxd.backend.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import site.dopplerxd.backend.model.entity.User;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * 用户表 Mapper 接口
- *
- * @author: <a href="https://github.com/DopplerXD">doppleryxc</a>
- * @time: 2025/2/18 22:53
- */
+* @author doppleryxc
+* @description 针对表【user】的数据库操作Mapper
+* @createDate 2025-02-20 17:43:59
+* @Entity site.dopplerxd.backend.model.entity.User
+*/
 public interface UserMapper extends BaseMapper<User> {
+
 }
+
+
+
+

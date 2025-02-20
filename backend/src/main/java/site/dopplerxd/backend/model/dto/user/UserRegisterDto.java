@@ -17,9 +17,9 @@ public class UserRegisterDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 3191241716373120793L;
 
-    private String userAccount;
+    private String username;
 
-    private String userPassword;
+    private String password;
 
     private String checkPassword;
 }
