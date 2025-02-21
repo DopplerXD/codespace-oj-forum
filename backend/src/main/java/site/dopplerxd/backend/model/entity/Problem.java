@@ -212,13 +212,7 @@ public class Problem implements Serializable {
     private Integer isUploadCase;
 
     /**
-     * 题目测试数据的版本号
-     */
-    @TableField(value = "case_version")
-    private String caseVersion;
-
-    /**
-     * 修改题目的管理员用户名
+     * 最新修改题目的用户ID
      */
     @TableField(value = "modified_user")
     private String modifiedUser;

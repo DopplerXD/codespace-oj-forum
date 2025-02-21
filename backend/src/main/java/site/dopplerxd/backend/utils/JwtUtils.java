@@ -1,8 +1,10 @@
 package site.dopplerxd.backend.utils;
 
 import cn.hutool.jwt.JWT;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import site.dopplerxd.backend.config.filter.JwtAuthenticationTokenFilter;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -29,14 +31,16 @@ public class JwtUtils {
     /**
      * 根据登录信息生成Token
      *
+     * @param id
      * @param username
-     * @param password
+     * @param role
      * @return
      */
-    public static String generateUserToken(String id, String username) {
+    public static String generateUserToken(String id, String username, String role) {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
         map.put("username", username);
+        map.put("role", role);
         return generateToken(map);
     }
 
@@ -61,7 +65,7 @@ public class JwtUtils {
      * token校验
      *
      * @param token
-     * @return
+     * @return boolean
      */
     public static boolean verify(String token) {
         if (StringUtils.isBlank(token)) {
@@ -69,5 +73,57 @@ public class JwtUtils {
         } else {
             return JWT.of(token).setKey(JWT_SECRET).verify();
         }
+    }
+
+    /**
+     * 从token获取role信息
+     *
+     * @param token
+     * @return role
+     */
+    public static String getRoleFromToken(String token) {
+        return JWT.of(token).setKey(JWT_SECRET).getPayload("role").toString();
+    }
+
+    /**
+     * 从request获取用户名信息
+     *
+     * @param request
+     * @return username
+     */
+    public static String getUsernameFromRequest(HttpServletRequest request) {
+        String token = JwtAuthenticationTokenFilter.getJwtFromRequest(request);
+        if (token == null) {
+            return null;
+        }
+        return JWT.of(token).setKey(JWT_SECRET).getPayload("username").toString();
+    }
+
+    /**
+     * 从request获取id信息
+     *
+     * @param request
+     * @return
+     */
+    public static String getUserIdFromRequest(HttpServletRequest request) {
+        String token = JwtAuthenticationTokenFilter.getJwtFromRequest(request);
+        if (token == null) {
+            return null;
+        }
+        return JWT.of(token).setKey(JWT_SECRET).getPayload("id").toString();
+    }
+
+    /**
+     * 从request获取role信息
+     *
+     * @param request
+     * @return
+     */
+    public static String getRoleFromRequest(HttpServletRequest request) {
+        String token = JwtAuthenticationTokenFilter.getJwtFromRequest(request);
+        if (token == null) {
+            return null;
+        }
+        return JWT.of(token).setKey(JWT_SECRET).getPayload("role").toString();
     }
 }

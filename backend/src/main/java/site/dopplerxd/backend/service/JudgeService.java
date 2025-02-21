@@ -10,4 +10,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface JudgeService extends IService<Judge> {
 
+    public void validJudge(Judge judge);
+
 }

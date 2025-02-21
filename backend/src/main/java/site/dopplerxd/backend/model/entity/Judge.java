@@ -29,12 +29,6 @@ public class Judge implements Serializable {
     private Long pid;
 
     /**
-     * 题目展示id
-     */
-    @TableField(value = "display_pid")
-    private String displayPid;
-
-    /**
      * 用户id
      */
     @TableField(value = "uid")

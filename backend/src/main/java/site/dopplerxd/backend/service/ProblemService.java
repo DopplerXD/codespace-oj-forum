@@ -1,5 +1,6 @@
 package site.dopplerxd.backend.service;
 
+import site.dopplerxd.backend.model.dto.problem.ProblemCreateDto;
 import site.dopplerxd.backend.model.entity.Problem;
 import com.baomidou.mybatisplus.extension.service.IService;
 

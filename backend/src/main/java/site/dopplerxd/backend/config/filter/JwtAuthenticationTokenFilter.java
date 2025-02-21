@@ -6,6 +6,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +20,8 @@ import site.dopplerxd.backend.common.ResultUtils;
 import site.dopplerxd.backend.utils.JwtUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * JWT认证过滤器
@@ -37,6 +41,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * 执行过滤操作
+     *
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -45,11 +58,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         if (StringUtils.isNotBlank(token) && JwtUtils.verify(token)) {
             try {
-                // 解析 JWT 中的用户账号
+                // 解析 JWT 中的用户账号和角色信息
                 String username = JWT.of(token).getPayload("username").toString();
+                String role = JWT.of(token).getPayload("role").toString();
 
                 // 根据用户账号获取用户详细信息
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                // 构建用户权限集合
+                Collection<GrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
 
                 // 创建认证令牌
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -68,7 +86,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getJwtFromRequest(HttpServletRequest request) {
+    /**
+     * 从请求头中获取 JWT
+     *
+     * @param request
+     * @return
+     */
+    public static String getJwtFromRequest(HttpServletRequest request) {
         String header = request.getHeader(TOKEN_HEADER);
         if (StringUtils.isNotBlank(header) && header.startsWith(TOKEN_PREFIX)) {
             return header.substring(TOKEN_PREFIX.length());

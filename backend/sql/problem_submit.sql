@@ -23,7 +23,7 @@ CREATE TABLE `judge`
 (
     `submit_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     `pid` bigint(20) unsigned NOT NULL COMMENT '题目id',
-    `display_pid` varchar(255) NOT NULL COMMENT '题目展示id',
+#     `display_pid` varchar(255) NOT NULL COMMENT '题目展示id',
     `uid` varchar(32) NOT NULL COMMENT '用户id',
     `username` varchar(255) DEFAULT NULL COMMENT '用户名',
     `submit_time` datetime NOT NULL COMMENT '提交的时间',
@@ -35,7 +35,7 @@ CREATE TABLE `judge`
     `score` int(11) DEFAULT NULL COMMENT 'IO判题则不为空',
     `length` int(11) DEFAULT NULL COMMENT '代码长度',
     `code` longtext NOT NULL COMMENT '代码',
-    `language` varchar(255) DEFAULT NULL COMMENT '代码语言',
+    `language` varchar(255) NOT NULL COMMENT '代码语言',
 #     `gid` bigint(20) unsigned DEFAULT NULL COMMENT '团队id，不为团队内提交则为null',
     `cid` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '比赛id，非比赛题目默认为0',
     `cpid` bigint(20) unsigned DEFAULT '0' COMMENT '比赛中题目排序id，非比赛题目默认为0',

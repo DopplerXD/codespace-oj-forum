@@ -63,7 +63,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败");
             }
-            return JwtUtils.generateUserToken(user.getId(), username);
+            return JwtUtils.generateUserToken(user.getId(), username, user.getRole());
         }
     }
 
@@ -91,7 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
         // 3. 创建token
-        String token = JwtUtils.generateUserToken(user.getId(), username);
+        String token = JwtUtils.generateUserToken(user.getId(), username, user.getRole());
         // 4. 返回token
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
