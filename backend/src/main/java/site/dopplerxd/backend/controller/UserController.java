@@ -62,7 +62,7 @@ public class UserController {
         String username = userLoginDto.getUsername();
         String password = userLoginDto.getPassword();
         if (StringUtils.isAnyBlank(username, password)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "必要参数为空");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户名或密码为空");
         }
         Map<String, Object> responseMap = userService.userLogin(username, password, request);
         return ResultUtils.success(responseMap);

@@ -1,5 +1,6 @@
 package site.dopplerxd.backend.model.dto.user;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.io.Serial;
