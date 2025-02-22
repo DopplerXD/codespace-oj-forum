@@ -21,31 +21,33 @@
             }"
           />
         </a-menu-item>
-        <!--        <a-menu-item key="1">首页</a-menu-item>-->
-        <!--        <a-menu-item key="2">题单</a-menu-item>-->
-        <!--        <a-menu-item key="3">题库</a-menu-item>-->
-        <!--        <a-menu-item key="4">比赛</a-menu-item>-->
-        <!--        <a-menu-item key="5">讨论区</a-menu-item>-->
-        <a-menu-item v-for="item in routes" :key="item.path">
+        <a-menu-item v-for="item in visibleRoutes" :key="item.path">
           {{ item.name }}
         </a-menu-item>
       </a-menu>
     </div>
     <div id="menu-right">
       <a-menu mode="horizontal">
-        <a-menu-item disabled>
-          <a-button>
-            <icon-github />
-          </a-button>
+        <a-link href="https://github.com/DopplerXD/codespace-oj-forum">
+          <icon-github />
+        </a-link>
+        <a-menu-item disabled v-if="loginUser.role === ACCESS_ENUM.NOT_LOGIN">
+          <a-button @click="loginOrRegister()">登录/注册</a-button>
         </a-menu-item>
-        <a-menu-item disabled>
-          <a-button>test</a-button>
-        </a-menu-item>
-        <a-menu-item disabled>
-          <a-button>test</a-button>
-        </a-menu-item>
-        <a-menu-item disabled>
-          <a-button>test</a-button>
+        <a-menu-item disabled v-else>
+          <a-avatar>
+            <img alt="avatar" :src="loginUserAvatar" />
+          </a-avatar>
+          {{ loginUserNickname }}
+          <a-dropdown>
+            <a-button>
+              <icon-down />
+            </a-button>
+            <template #content>
+              <a-doption>个人信息</a-doption>
+              <a-doption @click="userLogout()">登出</a-doption>
+            </template>
+          </a-dropdown>
         </a-menu-item>
       </a-menu>
     </div>
@@ -55,12 +57,30 @@
 <script lang="ts" setup>
 import { routes } from "@/router/routes";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { useStore } from "vuex";
+import { ref, computed } from "vue";
+import checkAccess from "@/access/checkAccess";
+import ACCESS_ENUM from "@/access/accessEnum";
 
 const router = useRouter();
+const store = useStore();
+
+// 使用 computed 监听 store.state.user.loginUser 的变化
+const loginUser = computed(() => store.state.user.loginUser);
+const loginUserNickname = computed(() => loginUser.value.nickname);
+const loginUserAvatar = computed(() => loginUser.value.avatar);
 
 // 默认主页
 const selectedKeys = ref(["/"]);
+
+// 过滤出不需要隐藏的路由
+const visibleRoutes = computed(() =>
+  routes.filter(
+    (item) =>
+      !(item.meta && item.meta.hidden) &&
+      checkAccess(loginUser.value, item?.meta?.access as string)
+  )
+);
 
 // 路由跳转后，更新选中的菜单项
 router.afterEach((to, from, failure) => {
@@ -70,6 +90,22 @@ router.afterEach((to, from, failure) => {
 const doMenuClick = (e: string) => {
   router.push({
     path: e,
+  });
+};
+
+const loginOrRegister = () => {
+  router.push({
+    path: "/login",
+  });
+};
+
+const userLogout = () => {
+  localStorage.removeItem("token");
+  store.commit("user/updateUser", {
+    nickname: "",
+    role: ACCESS_ENUM.NOT_LOGIN,
+    avatar: "",
+    token: "",
   });
 };
 </script>

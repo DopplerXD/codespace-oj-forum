@@ -4,16 +4,15 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import site.dopplerxd.backend.common.BaseResponse;
 import site.dopplerxd.backend.common.ErrorCode;
 import site.dopplerxd.backend.common.ResultUtils;
 import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.model.dto.user.UserLoginDto;
 import site.dopplerxd.backend.model.dto.user.UserRegisterDto;
+import site.dopplerxd.backend.model.entity.User;
+import site.dopplerxd.backend.model.vo.LoginUserVO;
 import site.dopplerxd.backend.service.UserService;
 
 import java.util.Map;
@@ -66,5 +65,17 @@ public class UserController {
         }
         Map<String, Object> responseMap = userService.userLogin(username, password, request);
         return ResultUtils.success(responseMap);
+    }
+
+    /**
+     * 获取当前登录用户
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/get/login")
+    public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
+        User user = userService.getLoginUser(request);
+        return ResultUtils.success(userService.getLoginUserVO(user));
     }
 }

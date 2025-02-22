@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import site.dopplerxd.backend.common.ErrorCode;
+import site.dopplerxd.backend.config.filter.JwtAuthenticationTokenFilter;
 import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.mapper.UserMapper;
 import site.dopplerxd.backend.model.entity.User;
@@ -101,6 +102,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 获取当前登录用户
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public User getLoginUser(HttpServletRequest request) {
+        if (JwtUtils.verify(JwtAuthenticationTokenFilter.getJwtFromRequest(request))) {
+            String id = JwtUtils.getUserIdFromRequest(request);
+            User user = this.getById(id);
+            if (user == null) {
+                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+            }
+            return user;
+        }
+        throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+    }
+
+    /**
+     * 获取当前登录用户VO
      *
      * @param user
      * @return

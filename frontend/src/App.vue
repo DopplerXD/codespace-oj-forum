@@ -10,7 +10,11 @@
 import BasicLayout from "@/layouts/BasicLayout.vue";
 import { onMounted } from "vue";
 
+const doInit = () => {
+  console.log("project init");
+};
 onMounted(() => {
   document.title = "Code Space";
+  doInit();
 });
 </script>
