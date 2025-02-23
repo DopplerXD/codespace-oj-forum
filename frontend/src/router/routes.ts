@@ -9,18 +9,18 @@ export const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "homepage" */ "../views/HomeView.vue"),
   },
   {
-    path: "/problems",
+    path: "/problem/list",
     name: "题库",
-    component: () =>
-      import(/* webpackChunkName: "problems" */ "../views/ProblemsView.vue"),
-  },
-  {
-    path: "/problems/list",
-    name: "题单",
     component: () =>
       import(
         /* webpackChunkName: "problems-list" */ "../views/ProblemListView.vue"
       ),
+  },
+  {
+    path: "/problems",
+    name: "题单",
+    component: () =>
+      import(/* webpackChunkName: "problems" */ "../views/ProblemsView.vue"),
   },
   {
     path: "/blog",
@@ -61,5 +61,13 @@ export const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "404" */ "../views/NoAuth.vue"),
     meta: { hidden: true }, // 不显示在导航栏中
+  },
+  {
+    path: "/problem/:pid",
+    name: "problemInfo",
+    component: () =>
+      import(
+        /* webpackChunkName: "ProblemInfoView" */ "../views/ProblemInfoView.vue"
+      ),
   },
 ];

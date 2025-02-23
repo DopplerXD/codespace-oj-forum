@@ -22,6 +22,7 @@ import site.dopplerxd.backend.utils.JwtUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 
 /**
  * JWT认证过滤器
@@ -53,8 +54,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        //  打印所有请求头
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            System.out.println(headerName + ": " + request.getHeader(headerName));
+        }
+
         // 从请求头中获取 JWT
         String token = getJwtFromRequest(request);
+        System.out.println("JwtAuthenticationTokenFilter - " + token);
 
         if (StringUtils.isNotBlank(token) && JwtUtils.verify(token)) {
             try {
@@ -71,7 +80,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
                 // 创建认证令牌
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                        userDetails, null, authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 // 将认证信息设置到安全上下文

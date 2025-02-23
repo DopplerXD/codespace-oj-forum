@@ -33,11 +33,6 @@ public class User implements Serializable {
     private String password;
 
     /**
-     * 用户昵称
-     */
-    private String nickname;
-
-    /**
      * 用户头像
      */
     private String avatar;

@@ -6,7 +6,7 @@ export default {
   namespaced: true,
   state: () => ({
     loginUser: {
-      nickname: "未登录",
+      username: "未登录",
       avatar: "",
       role: ACCESS_ENUM.NOT_LOGIN,
       token: "",
@@ -18,13 +18,13 @@ export default {
       console.log("getLoginUser", res);
       if (res.code === 0) {
         commit("updateUser", {
-          nickname: res.data?.nickname,
+          username: res.data?.username,
           role: res.data?.role,
           avatar: res.data?.avatar,
         });
       } else {
         commit("updateUser", {
-          nickname: "未登录",
+          username: "未登录",
           avatar: "",
           role: ACCESS_ENUM.NOT_LOGIN,
           token: "",

@@ -17,12 +17,6 @@
           placeholder="请确认密码"
         />
       </a-form-item>
-      <a-form-item field="nickname" tooltip="对外展示的昵称" label="昵称">
-        <a-input
-          v-model="registerUser.nickname"
-          placeholder="请输入昵称（默认同用户名）"
-        />
-      </a-form-item>
       <a-row justify="center">
         <a-col :span="4">
           <a-form-item>
@@ -47,7 +41,6 @@ const registerUser = ref({
   username: "",
   password: "",
   checkPassword: "",
-  nickname: "",
 });
 
 const userRegister = () => {

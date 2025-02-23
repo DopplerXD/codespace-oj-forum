@@ -35,12 +35,6 @@ public class User implements Serializable {
     private String password;
 
     /**
-     * 昵称
-     */
-    @TableField(value = "nickname")
-    private String nickname;
-
-    /**
      * 学校
      */
     @TableField(value = "school")

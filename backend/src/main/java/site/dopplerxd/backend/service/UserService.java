@@ -2,6 +2,7 @@ package site.dopplerxd.backend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
+import site.dopplerxd.backend.model.dto.user.UserRegisterDto;
 import site.dopplerxd.backend.model.entity.User;
 import site.dopplerxd.backend.model.vo.LoginUserVO;
 
@@ -23,7 +24,7 @@ public interface UserService extends IService<User> {
      * @param request
      * @return
      */
-    String userRegister(String username, String password, String checkPassword, HttpServletRequest request);
+    String userRegister(UserRegisterDto userRegisterDto, HttpServletRequest request);
 
     /**
      * 用户登录

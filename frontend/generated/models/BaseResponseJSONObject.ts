@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type UserRegisterDto = {
-    username: string;
-    password: string;
-    checkPassword: string;
+export type BaseResponseJSONObject = {
+    code?: number;
+    data?: Record<string, Record<string, any>>;
+    message?: string;
 };
 

@@ -1,16 +1,14 @@
 package site.dopplerxd.backend.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import site.dopplerxd.backend.common.BaseResponse;
 import site.dopplerxd.backend.common.ErrorCode;
 import site.dopplerxd.backend.common.ResultUtils;
@@ -18,6 +16,7 @@ import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.exception.ThrowUtils;
 import site.dopplerxd.backend.model.dto.problem.ProblemCreateDto;
 import site.dopplerxd.backend.model.entity.Problem;
+import site.dopplerxd.backend.model.vo.ProblemVO;
 import site.dopplerxd.backend.service.ProblemService;
 import site.dopplerxd.backend.utils.JwtUtils;
 
@@ -35,6 +34,13 @@ public class ProblemController {
     @Resource
     private ProblemService problemService;
 
+    /**
+     * 创建题目（管理员）
+     *
+     * @param problemCreateDto
+     * @param request
+     * @return
+     */
     @PreAuthorize("hasRole('admin')")
     @PostMapping ("/create")
     public BaseResponse<Long> problemCreate(@Validated @RequestBody ProblemCreateDto problemCreateDto, HttpServletRequest request) {
@@ -53,5 +59,31 @@ public class ProblemController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         long newProblemId = problem.getId();
         return ResultUtils.success(newProblemId);
+    }
+
+    /**
+     * 获取指定题目
+     *
+     * @param pid
+     * @return
+     */
+    @GetMapping("/{pid}")
+    public BaseResponse<ProblemVO> problemGet(@PathVariable("pid") String pid) {
+        if (pid == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        ProblemVO problemVO = problemService.getByPid(pid);
+        return ResultUtils.success(problemVO);
+    }
+
+    /**
+     * 获取题目列表
+     *
+     * @param current
+     * @return
+     */
+    @GetMapping("/list")
+    public BaseResponse<JSONObject> problemGetList(@RequestParam int current) {
+        return ResultUtils.success(problemService.getProblemList(current));
     }
 }

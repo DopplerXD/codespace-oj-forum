@@ -31,14 +31,14 @@
         <a-link href="https://github.com/DopplerXD/codespace-oj-forum">
           <icon-github />
         </a-link>
-        <a-menu-item disabled v-if="loginUser.role === ACCESS_ENUM.NOT_LOGIN">
-          <a-button @click="loginOrRegister()">登录/注册</a-button>
-        </a-menu-item>
-        <a-menu-item disabled v-else>
+        <a-menu-item
+          disabled
+          v-if="store.state.user.loginUser.role !== ACCESS_ENUM.NOT_LOGIN"
+        >
           <a-avatar>
             <img alt="avatar" :src="loginUserAvatar" />
           </a-avatar>
-          {{ loginUserNickname }}
+          {{ loginUserUsername }}
           <a-dropdown>
             <a-button>
               <icon-down />
@@ -48,6 +48,9 @@
               <a-doption @click="userLogout()">登出</a-doption>
             </template>
           </a-dropdown>
+        </a-menu-item>
+        <a-menu-item disabled v-else>
+          <a-button @click="loginOrRegister()">登录/注册</a-button>
         </a-menu-item>
       </a-menu>
     </div>
@@ -67,7 +70,7 @@ const store = useStore();
 
 // 使用 computed 监听 store.state.user.loginUser 的变化
 const loginUser = computed(() => store.state.user.loginUser);
-const loginUserNickname = computed(() => loginUser.value.nickname);
+const loginUserUsername = computed(() => loginUser.value.username);
 const loginUserAvatar = computed(() => loginUser.value.avatar);
 
 // 默认主页
@@ -102,7 +105,7 @@ const loginOrRegister = () => {
 const userLogout = () => {
   localStorage.removeItem("token");
   store.commit("user/updateUser", {
-    nickname: "",
+    username: "",
     role: ACCESS_ENUM.NOT_LOGIN,
     avatar: "",
     token: "",

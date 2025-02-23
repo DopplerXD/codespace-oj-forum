@@ -7,13 +7,17 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { BaseResponseJSONObject } from './models/BaseResponseJSONObject';
 export type { BaseResponseLoginUserVO } from './models/BaseResponseLoginUserVO';
 export type { BaseResponseLong } from './models/BaseResponseLong';
 export type { BaseResponseMapStringObject } from './models/BaseResponseMapStringObject';
+export type { BaseResponseProblemVO } from './models/BaseResponseProblemVO';
 export type { BaseResponseString } from './models/BaseResponseString';
+export type { JSONConfig } from './models/JSONConfig';
 export type { JudgeSubmitDto } from './models/JudgeSubmitDto';
 export type { LoginUserVO } from './models/LoginUserVO';
 export type { ProblemCreateDto } from './models/ProblemCreateDto';
+export type { ProblemVO } from './models/ProblemVO';
 export type { UserLoginDto } from './models/UserLoginDto';
 export type { UserRegisterDto } from './models/UserRegisterDto';
 

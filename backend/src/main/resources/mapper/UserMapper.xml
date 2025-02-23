@@ -8,7 +8,6 @@
             <id property="id" column="id" jdbcType="VARCHAR"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
-            <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
             <result property="school" column="school" jdbcType="VARCHAR"/>
             <result property="gender" column="gender" jdbcType="VARCHAR"/>
             <result property="github" column="github" jdbcType="VARCHAR"/>
@@ -26,8 +25,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,username,password,
-        nickname,school,gender,
+        id,username,password,school,gender,
         github,blog,cf_username,
         email,avatar,signature,
         title_name,title_color,role,

@@ -6,10 +6,11 @@ import "@arco-design/web-vue/dist/arco.css";
 import router from "./router";
 import store from "./store";
 import "@/access";
+import instance from "@/plugins/axios";
 
-createApp(App)
-  .use(ArcoVue)
-  .use(ArcoVueIcon)
-  .use(router)
-  .use(store)
-  .mount("#app");
+const app = createApp(App);
+
+// 在 Vue 3 中使用 app.config.globalProperties 挂载全局属性
+app.config.globalProperties.$http = instance;
+
+app.use(ArcoVue).use(ArcoVueIcon).use(router).use(store).mount("#app");

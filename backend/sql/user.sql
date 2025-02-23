@@ -7,7 +7,7 @@ CREATE TABLE `user`
     `id` varchar(32) NOT NULL,
     `username` varchar(100) NOT NULL COMMENT '用户名（唯一）',
     `password` varchar(100) NOT NULL COMMENT '密码',
-    `nickname` varchar(100) DEFAULT NULL COMMENT '昵称',
+#     `nickname` varchar(100) DEFAULT NULL COMMENT '昵称',
     `school` varchar(100) DEFAULT NULL COMMENT '学校',
     `gender` varchar(20) DEFAULT 'secrecy' NOT NULL  COMMENT '性别',
     `github` varchar(255) DEFAULT NULL COMMENT 'github地址',

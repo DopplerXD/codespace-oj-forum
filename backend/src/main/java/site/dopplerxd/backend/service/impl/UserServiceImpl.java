@@ -12,6 +12,7 @@ import site.dopplerxd.backend.common.ErrorCode;
 import site.dopplerxd.backend.config.filter.JwtAuthenticationTokenFilter;
 import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.mapper.UserMapper;
+import site.dopplerxd.backend.model.dto.user.UserRegisterDto;
 import site.dopplerxd.backend.model.entity.User;
 import site.dopplerxd.backend.model.vo.LoginUserVO;
 import site.dopplerxd.backend.service.UserService;
@@ -32,7 +33,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private static final String SALT = "valorant";
 
     @Override
-    public String userRegister(String username, String password, String checkPassword, HttpServletRequest request) {
+    public String userRegister(UserRegisterDto userRegisterDto, HttpServletRequest request) {
+        String username = userRegisterDto.getUsername();
+        String password = userRegisterDto.getPassword();
+        String checkPassword = userRegisterDto.getCheckPassword();
         // 1. 校验
         if (StringUtils.isAnyBlank(username, password, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");

@@ -38,7 +38,6 @@ import store from "@/store";
 
 const router = useRouter();
 const route = useRoute();
-const redirectPath = route.query.redirect || "/";
 
 const loginUser = ref({
   username: "",
@@ -50,7 +49,7 @@ const userLogin = async () => {
   const res = await UserControllerService.userLogin(loginUser.value);
   if (res.code === 0) {
     await store.commit("user/updateUser", {
-      nickname: res.data?.loginUserVO.nickname,
+      username: res.data?.loginUserVO.username,
       role: res.data?.loginUserVO.role,
       avatar: res.data?.loginUserVO.avatar,
       token: res.data?.token,
