@@ -33,7 +33,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { UserControllerService } from "../../generated";
+import { UserControllerService } from "../../../generated";
 import store from "@/store";
 
 const router = useRouter();

@@ -58,12 +58,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
-            System.out.println(headerName + ": " + request.getHeader(headerName));
+//            System.out.println(headerName + ": " + request.getHeader(headerName));
         }
 
         // 从请求头中获取 JWT
         String token = getJwtFromRequest(request);
-        System.out.println("JwtAuthenticationTokenFilter - " + token);
+//        System.out.println("JwtAuthenticationTokenFilter - " + token);
 
         if (StringUtils.isNotBlank(token) && JwtUtils.verify(token)) {
             try {

@@ -28,6 +28,7 @@ import FootBar from "@/components/FootBar.vue";
   display: flex;
   justify-content: center; /* 水平居中 */
   min-height: calc(100vh - 70px - 65px); /* 确保容器至少占满视口高度 */
+  background-color: #efefef;
 }
 
 .left-background,

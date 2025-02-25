@@ -83,7 +83,7 @@ public class ProblemController {
      * @return
      */
     @GetMapping("/list")
-    public BaseResponse<JSONObject> problemGetList(@RequestParam int current) {
-        return ResultUtils.success(problemService.getProblemList(current));
+    public BaseResponse<JSONObject> problemGetList(@RequestParam int current, HttpServletRequest request) {
+        return ResultUtils.success(problemService.getProblemList(current, JwtUtils.getUserIdFromRequest(request)));
     }
 }

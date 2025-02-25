@@ -1,14 +1,19 @@
 <template>
   <div>
-    <h1>{{ problem?.title }}</h1>
-    <p>{{ problem?.description }}</p>
+    <BasicComponent>
+      <div id="problem-description">
+        <h1>{{ problem?.title }}</h1>
+        <p>{{ problem?.description }}</p>
+      </div>
+    </BasicComponent>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { ProblemControllerService } from "../../generated";
+import { ProblemControllerService } from "../../../generated";
+import BasicComponent from "@/components/BasicComponent.vue";
 
 const route = useRoute();
 const problem = ref<any>();
@@ -25,4 +30,8 @@ const fetchProblemInfo = async (pid: string) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#problem-description {
+  padding: 10px;
+}
+</style>

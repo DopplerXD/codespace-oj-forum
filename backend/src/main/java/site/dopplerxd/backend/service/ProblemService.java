@@ -15,5 +15,5 @@ public interface ProblemService extends IService<Problem> {
     ProblemVO getByPid(String pid);
 
 
-    JSONObject getProblemList(Integer current);
+    JSONObject getProblemList(Integer current, String userId);
 }
