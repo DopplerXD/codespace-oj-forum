@@ -6,6 +6,11 @@ spring:
     url: jdbc:mysql://localhost:3306/code_space?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
+  data:
+    redis:
+      port: 6379
+#      password: 123456
+      host: localhost
 server:
   port: 8081
 # springdoc-openapi项目配置

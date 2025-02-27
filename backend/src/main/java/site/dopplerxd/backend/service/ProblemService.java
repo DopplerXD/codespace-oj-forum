@@ -1,6 +1,7 @@
 package site.dopplerxd.backend.service;
 
 import cn.hutool.json.JSONObject;
+import site.dopplerxd.backend.model.dto.problem.ProblemQueryDto;
 import site.dopplerxd.backend.model.entity.Problem;
 import com.baomidou.mybatisplus.extension.service.IService;
 import site.dopplerxd.backend.model.vo.ProblemVO;
@@ -14,6 +15,5 @@ public interface ProblemService extends IService<Problem> {
 
     ProblemVO getByPid(String pid);
 
-
-    JSONObject getProblemList(Integer current, String userId);
+    JSONObject getProblemList(ProblemQueryDto queryDto, String userId);
 }

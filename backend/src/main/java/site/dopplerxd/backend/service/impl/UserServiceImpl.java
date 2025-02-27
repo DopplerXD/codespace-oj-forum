@@ -33,7 +33,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private static final String SALT = "valorant";
 
     @Override
-    public String userRegister(UserRegisterDto userRegisterDto, HttpServletRequest request) {
+    public void userRegister(UserRegisterDto userRegisterDto, HttpServletRequest request) {
         String username = userRegisterDto.getUsername();
         String password = userRegisterDto.getPassword();
         String checkPassword = userRegisterDto.getCheckPassword();
@@ -68,12 +68,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败");
             }
-            return JwtUtils.generateUserToken(user.getId(), username, user.getRole());
         }
     }
 
     @Override
-    public Map<String, Object> userLogin(String username, String password, HttpServletRequest request) {
+    public Map<String, Object> userLogin(String username, String password, boolean rememberMe, HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(username, password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -96,7 +95,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
         // 3. 创建token
-        String token = JwtUtils.generateUserToken(user.getId(), username, user.getRole());
+        String token = JwtUtils.generateUserToken(user.getId(), username, user.getRole(), rememberMe);
         // 4. 返回token
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
@@ -137,5 +136,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtil.copyProperties(user, loginUserVO);
         return loginUserVO;
+    }
+
+    /**
+     * 用户注销
+     *
+     * @param token
+     * @return
+     */
+    @Override
+    public void userLogout(String token) {
+        // TODO 添加到Redis黑名单
     }
 }

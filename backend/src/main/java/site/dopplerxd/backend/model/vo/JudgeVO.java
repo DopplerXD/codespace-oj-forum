@@ -1,21 +1,19 @@
-package site.dopplerxd.backend.model.entity;
+package site.dopplerxd.backend.model.vo;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
- * 评测实体类
- *
- * @author doppleryxc
- * @TableName judge
+ * @author: <a href="https://github.com/DopplerXD">doppleryxc</a>
+ * @time: 2025/2/27 14:59
  */
-@TableName(value ="judge")
-@Data
-public class Judge implements Serializable {
+public class JudgeVO implements Serializable {
 
     @TableId(value = "submit_id", type = IdType.ASSIGN_ID)
     private Long submitId;
@@ -25,12 +23,6 @@ public class Judge implements Serializable {
      */
     @TableField(value = "pid")
     private Long pid;
-
-    /**
-     * 用户id
-     */
-    @TableField(value = "uid")
-    private String uid;
 
     /**
      * 比赛id，非比赛题目默认为0
@@ -121,30 +113,6 @@ public class Judge implements Serializable {
      */
     @TableField(value = "vjudge_username")
     private String vjudgeUsername;
-
-    /**
-     * vjudge判题在其它oj的提交账号密码
-     */
-    @TableField(value = "vjudge_password")
-    private String vjudgePassword;
-
-    /**
-     * 是否删除
-     */
-    @TableLogic
-    private Integer isDelete;
-
-    /**
-     * 
-     */
-    @TableField(value = "gmt_create")
-    private Date gmtCreate;
-
-    /**
-     * 
-     */
-    @TableField(value = "gmt_modified")
-    private Date gmtModified;
 
     @Serial
     @TableField(exist = false)

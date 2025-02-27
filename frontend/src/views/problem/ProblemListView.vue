@@ -190,12 +190,12 @@ const problemGet = (problemId: string) => {
   });
 };
 
-const searchByTags = (tags: string[]) => {
-  // TODO: 实现根据标签搜索的逻辑
-};
-
-const searchByKeywords = (keyword: string) => {
-  // TODO: 实现根据关键词搜索的逻辑
+const conditionalSearch = (
+  difficulty: number,
+  tags: string[],
+  keyword: string
+) => {
+  // TODO: 实现根据难度、标签和关键词搜索的逻辑
 };
 </script>
 

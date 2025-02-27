@@ -33,6 +33,16 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 处理自定义异常 BusinessException
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(BusinessException.class)
+    public BaseResponse<?> handleBusinessException(BusinessException e) {
+        return ResultUtils.error(e.getCode(), e.getMessage());
+    }
+
+    /**
      * 处理业务异常
      *
      * @param e

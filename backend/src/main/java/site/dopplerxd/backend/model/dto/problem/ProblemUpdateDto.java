@@ -1,9 +1,6 @@
 package site.dopplerxd.backend.model.dto.problem;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.io.Serial;
@@ -17,10 +14,13 @@ import java.util.List;
  * @time: 2025/2/20 21:29
  */
 @Data
-public class ProblemCreateDto implements Serializable {
+public class ProblemUpdateDto implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 3191241716373120793L;
+
+    @NotNull(message = "题目ID不能为空")
+    private Long id;
 
     @NotBlank(message = "自定义题号不能为空")
     private String problemId;

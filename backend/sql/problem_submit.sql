@@ -23,7 +23,6 @@ CREATE TABLE `judge`
 (
     `submit_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     `pid` bigint(20) unsigned NOT NULL COMMENT '题目id',
-#     `display_pid` varchar(255) NOT NULL COMMENT '题目展示id',
     `uid` varchar(32) NOT NULL COMMENT '用户id',
     `username` varchar(255) DEFAULT NULL COMMENT '用户名',
     `submit_time` datetime NOT NULL COMMENT '提交的时间',
@@ -49,7 +48,7 @@ CREATE TABLE `judge`
     `is_delete` tinyint(1) DEFAULT '0' COMMENT '是否删除',
     `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
     `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`submit_id`,`pid`,`display_pid`,`uid`,`cid`),
+    PRIMARY KEY (`submit_id`,`pid`,`uid`,`cid`),
     KEY `pid` (`pid`),
     KEY `uid` (`uid`),
     KEY `username` (`username`),

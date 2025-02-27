@@ -18,13 +18,10 @@ public interface UserService extends IService<User> {
     /**
      * 用户注册
      *
-     * @param username
-     * @param password
-     * @param checkPassword
+     * @param userRegisterDto
      * @param request
-     * @return
      */
-    String userRegister(UserRegisterDto userRegisterDto, HttpServletRequest request);
+    void userRegister(UserRegisterDto userRegisterDto, HttpServletRequest request);
 
     /**
      * 用户登录
@@ -34,7 +31,7 @@ public interface UserService extends IService<User> {
      * @param request
      * @return
      */
-    Map<String, Object> userLogin(String username, String password, HttpServletRequest request);
+    Map<String, Object> userLogin(String username, String password, boolean rememberMe, HttpServletRequest request);
 
     User getLoginUser(HttpServletRequest request);
 
@@ -45,4 +42,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     LoginUserVO getLoginUserVO(User user);
+
+    void userLogout(String token);
 }

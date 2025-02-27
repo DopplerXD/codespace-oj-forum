@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import site.dopplerxd.backend.common.BaseResponse;
 import site.dopplerxd.backend.common.ErrorCode;
 import site.dopplerxd.backend.common.ResultUtils;
+import site.dopplerxd.backend.config.filter.JwtAuthenticationTokenFilter;
 import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.model.dto.user.UserLoginDto;
 import site.dopplerxd.backend.model.dto.user.UserRegisterDto;
 import site.dopplerxd.backend.model.entity.User;
 import site.dopplerxd.backend.model.vo.LoginUserVO;
 import site.dopplerxd.backend.service.UserService;
+import site.dopplerxd.backend.utils.JwtUtils;
 
 import java.util.Map;
 
@@ -37,8 +39,8 @@ public class UserController {
         if (userRegisterDto == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        String result = userService.userRegister(userRegisterDto, request);
-        return ResultUtils.success(result);
+        userService.userRegister(userRegisterDto, request);
+        return ResultUtils.success("注册成功，请返回登录！");
     }
 
     /**
@@ -58,7 +60,8 @@ public class UserController {
         if (StringUtils.isAnyBlank(username, password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户名或密码为空");
         }
-        Map<String, Object> responseMap = userService.userLogin(username, password, request);
+        boolean rememberMe = userLoginDto.isRememberMe();
+        Map<String, Object> responseMap = userService.userLogin(username, password, rememberMe, request);
         return ResultUtils.success(responseMap);
     }
 
@@ -72,5 +75,11 @@ public class UserController {
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(user));
+    }
+
+    @PostMapping("/logout")
+    public BaseResponse<String> userLogout(HttpServletRequest request) {
+        userService.userLogout(JwtAuthenticationTokenFilter.getJwtFromRequest(request));
+        return ResultUtils.success("注销成功");
     }
 }

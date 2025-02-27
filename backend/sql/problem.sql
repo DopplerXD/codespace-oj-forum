@@ -26,7 +26,7 @@ CREATE TABLE `problem`
     `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     `problem_id` varchar(255) NOT NULL COMMENT '问题的自定义ID 例如（HOJ-1000）',
     `title` varchar(255) NOT NULL COMMENT '题目',
-    `author` varchar(255) DEFAULT '未知' COMMENT '作者 username',
+    `author` varchar(100) DEFAULT '未知' COMMENT '作者 username',
     `type` int(11) NOT NULL DEFAULT '0' COMMENT '0为ACM,1为OI',
     `time_limit` int(11) DEFAULT '1000' COMMENT '单位ms',
     `memory_limit` int(11) DEFAULT '65535' COMMENT '单位kb',
@@ -56,7 +56,7 @@ CREATE TABLE `problem`
     `open_case_result` tinyint(1) DEFAULT '1' COMMENT '是否默认开启该题目的测试样例结果查看',
     `is_upload_case` tinyint(1) DEFAULT '1' COMMENT '题目测试数据是否是上传文件的',
 #     `case_version` varchar(40) DEFAULT '0' COMMENT '题目测试数据的版本号',
-    `modified_user` varchar(32) DEFAULT NULL COMMENT '最新修改题目的用户ID',
+    `modified_user` varchar(100) DEFAULT NULL COMMENT '最新修改题目的username',
 #     `is_group` tinyint(1) DEFAULT '0' COMMENT '是否为团队内部题目',
 #     `gid` bigint(20) unsigned DEFAULT NULL COMMENT '团队id',
 #     `apply_public_progress` int(11) DEFAULT NULL COMMENT '申请公开的进度：null为未申请，1为申请中，2为申请通过，3为申请拒绝',
@@ -68,5 +68,18 @@ CREATE TABLE `problem`
     PRIMARY KEY (`id`),
     KEY `author` (`author`),
     KEY `problem_id` (`problem_id`),
-    CONSTRAINT `problem_ibfk_1` FOREIGN KEY (`author`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE CASCADE
+    CONSTRAINT `problem_ibfk_1` FOREIGN KEY (`author`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    CONSTRAINT `problem_ibfk_2` FOREIGN KEY (`modified_user`) REFERENCES `user` (`username`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
+
+-- 添加外键约束
+ALTER TABLE problem
+    ADD CONSTRAINT problem_ibfk_2
+        FOREIGN KEY (modified_user)
+            REFERENCES user (username)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE;
+
+
+ALTER TABLE problem
+    ADD CONSTRAINT unique_problem_id UNIQUE (problem_id);

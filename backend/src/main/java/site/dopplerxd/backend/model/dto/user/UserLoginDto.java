@@ -21,4 +21,9 @@ public class UserLoginDto implements Serializable {
     private String username;
 
     private String password;
+
+    /**
+     * 是否七天内自动登录
+     */
+    private boolean rememberMe;
 }

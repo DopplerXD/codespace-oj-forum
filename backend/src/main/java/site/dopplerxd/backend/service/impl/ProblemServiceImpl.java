@@ -9,6 +9,7 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import site.dopplerxd.backend.common.ErrorCode;
 import site.dopplerxd.backend.exception.BusinessException;
+import site.dopplerxd.backend.model.dto.problem.ProblemQueryDto;
 import site.dopplerxd.backend.model.entity.Judge;
 import site.dopplerxd.backend.model.entity.Problem;
 import site.dopplerxd.backend.model.vo.ProblemSummaryVO;
@@ -49,32 +50,43 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem>
         return problemVO;
     }
 
+    // TODO: 题目列表条件查询
     @Override
-    public JSONObject getProblemList(Integer current, String userId) {
-        if (current == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
+    public JSONObject getProblemList(ProblemQueryDto queryDto, String userId) {
+        int current = queryDto.getCurrent();
+        int difficulty = queryDto.getDifficulty();
+        List<String> tags = queryDto.getTags();
+        String keyword = queryDto.getKeyword();
+
         IPage<Problem> problemPage = new Page<>(current, 30);
         List<Problem> problems = this.page(problemPage).getRecords();
         List<ProblemSummaryVO> items = new LinkedList<>();
         for (Problem problem : problems) {
             ProblemSummaryVO problemSummaryVO = new ProblemSummaryVO();
             BeanUtils.copyProperties(problem, problemSummaryVO);
-            QueryWrapper<Judge> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("pid", problem.getProblemId());
-            queryWrapper.eq("uid", userId);
-            if (judgeService.exists(queryWrapper)) {
-                queryWrapper.eq("status", 0);
-                if (judgeService.exists(queryWrapper)) {
-                    problemSummaryVO.setStatus(1);
-                } else {
-                    problemSummaryVO.setStatus(-1);
-                }
-            } else {
+
+            // 判断提交状态
+            if (userId == null) {
                 problemSummaryVO.setStatus(0);
+            } else {
+                QueryWrapper<Judge> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("pid", problem.getProblemId());
+                queryWrapper.eq("uid", userId);
+                if (judgeService.exists(queryWrapper)) {
+                    queryWrapper.eq("status", 0);
+                    if (judgeService.exists(queryWrapper)) {
+                        problemSummaryVO.setStatus(1);
+                    } else {
+                        problemSummaryVO.setStatus(-1);
+                    }
+                } else {
+                    problemSummaryVO.setStatus(0);
+                }
             }
+
             items.add(problemSummaryVO);
         }
+
         JSONObject res = new JSONObject();
         res.set("problems", items);
         res.set("total", items.size());
