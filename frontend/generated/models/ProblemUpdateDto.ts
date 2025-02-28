@@ -2,7 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type ProblemCreateDto = {
+export type ProblemUpdateDto = {
+    id: number;
     problemId: string;
     title: string;
     type?: number;

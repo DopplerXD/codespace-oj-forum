@@ -6,6 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
@@ -159,14 +160,27 @@ public class ProblemController {
     }
 
     /**
-     * 获取题目列表，支持条件分页查询
+     * 获取题目列表
      *
-     * @param queryDto 题目查询条件
-     * @param request HttpServletRequest
-     * @return 包含题目列表的 BaseResponse
+     * @param current
+     * @param difficulty
+     * @param tags 传入形式："tag1","tag2"    Spring会自动包装成List<String>
+     * @param keyword
+     * @param request 返回List<problems>、total、pages
+     * @return
      */
     @GetMapping("/list")
-    public BaseResponse<JSONObject> problemGetList(@Validated @RequestParam ProblemQueryDto queryDto, HttpServletRequest request) {
-        return ResultUtils.success(problemService.getProblemList(queryDto, JwtUtils.getUserIdFromRequest(request)));
+    public BaseResponse<JSONObject> problemGetList(
+            @RequestParam(value = "current", defaultValue = "1", required = false) int current,
+            @RequestParam(value = "difficulty", required = false) Integer difficulty,
+            @RequestParam(value = "tags", required = false) List<String> tags,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            HttpServletRequest request) {
+        String userId = null;
+        if (JwtUtils.isLogin(request)) {
+            userId = JwtUtils.getUserIdFromRequest(request);
+        }
+        ProblemQueryDto queryDto = new ProblemQueryDto(current, difficulty, tags, keyword);
+        return ResultUtils.success(problemService.getProblemList(queryDto, userId));
     }
 }

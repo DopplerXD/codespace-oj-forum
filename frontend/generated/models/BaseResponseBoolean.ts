@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type UserLoginDto = {
-    username?: string;
-    password?: string;
-    rememberMe?: boolean;
+export type BaseResponseBoolean = {
+    code?: number;
+    data?: boolean;
+    message?: string;
 };
 

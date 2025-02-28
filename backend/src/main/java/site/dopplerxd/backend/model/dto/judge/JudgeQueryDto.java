@@ -25,7 +25,6 @@ public class JudgeQueryDto implements Serializable {
     /**
      * 页码
      */
-    @Min(value = 1, message = "页码不能小于1")
     private int current;
 
     /**

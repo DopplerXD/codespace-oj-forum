@@ -132,4 +132,15 @@ public class JwtUtils {
         }
         return JWT.of(token).setKey(JWT_SECRET).getPayload("role").toString();
     }
+
+    /**
+     * 判断用户是否登录
+     *
+     * @param request
+     * @return
+     */
+    public static boolean isLogin(HttpServletRequest request) {
+        String token = JwtAuthenticationTokenFilter.getJwtFromRequest(request);
+        return token != null;
+    }
 }

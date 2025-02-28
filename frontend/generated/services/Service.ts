@@ -15,7 +15,7 @@ export class Service {
   public static test(): CancelablePromise<string> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/user/info"
+      url: "/user/info",
     });
   }
 
@@ -27,7 +27,7 @@ export class Service {
   public static test2(): CancelablePromise<Record<string, any>> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/user/hello"
+      url: "/user/hello",
     });
   }
 }

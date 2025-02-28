@@ -73,11 +73,20 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/problem/:pid",
-    name: "problemInfo",
+    name: "题目详情",
     component: () =>
       import(
         /* webpackChunkName: "ProblemInfoView" */ "../views/problem/ProblemInfoView.vue"
       ),
     meta: { hidden: true },
+  },
+  {
+    path: "/problem/manage",
+    name: "管理题目",
+    component: () =>
+      import(
+        /* webpackChunkName: "ProblemManageView" */ "../views/problem/ProblemManageView.vue"
+      ),
+    meta: { access: ACCESS_ENUM.USER },
   },
 ];

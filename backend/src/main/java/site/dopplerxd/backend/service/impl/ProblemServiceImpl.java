@@ -1,6 +1,7 @@
 package site.dopplerxd.backend.service.impl;
 
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -50,17 +51,44 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem>
         return problemVO;
     }
 
-    // TODO: 题目列表条件查询
     @Override
     public JSONObject getProblemList(ProblemQueryDto queryDto, String userId) {
-        int current = queryDto.getCurrent();
-        int difficulty = queryDto.getDifficulty();
+//        System.out.println("tags: " + queryDto.getTags());
+
+        int current = queryDto.getCurrent() > 0 ? queryDto.getCurrent() : 1; // 默认查第一页
+        Integer difficulty = queryDto.getDifficulty();
         List<String> tags = queryDto.getTags();
         String keyword = queryDto.getKeyword();
+        System.out.println("current: " + current);
+
+        // 构建查询条件
+        QueryWrapper<Problem> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByAsc("problem_id");
+
+        if (difficulty != null) {
+            queryWrapper.eq("difficulty", difficulty);
+        }
+        if (tags!= null &&!tags.isEmpty()) {
+//            queryWrapper.like("tags", tags);
+            for (int i = 0; i < tags.size(); i++) {
+                if (i > 0) {
+                    queryWrapper.or();
+                }
+                queryWrapper.like("tags", tags.get(i));
+            }
+        }
+        if (keyword != null && !keyword.isEmpty()) {
+            queryWrapper.like("title", keyword).or().like("description", keyword);
+        }
+
+        // 输出查询条件
+//        System.out.println("QueryWrapper: " + queryWrapper.getSqlSegment());
 
         IPage<Problem> problemPage = new Page<>(current, 30);
-        List<Problem> problems = this.page(problemPage).getRecords();
+        IPage<Problem> pageResult = this.page(problemPage, queryWrapper);
+        List<Problem> problems = pageResult.getRecords();
         List<ProblemSummaryVO> items = new LinkedList<>();
+
         for (Problem problem : problems) {
             ProblemSummaryVO problemSummaryVO = new ProblemSummaryVO();
             BeanUtils.copyProperties(problem, problemSummaryVO);
@@ -69,16 +97,14 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem>
             if (userId == null) {
                 problemSummaryVO.setStatus(0);
             } else {
-                QueryWrapper<Judge> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("pid", problem.getProblemId());
-                queryWrapper.eq("uid", userId);
-                if (judgeService.exists(queryWrapper)) {
-                    queryWrapper.eq("status", 0);
-                    if (judgeService.exists(queryWrapper)) {
-                        problemSummaryVO.setStatus(1);
-                    } else {
-                        problemSummaryVO.setStatus(-1);
-                    }
+                QueryWrapper<Judge> judgeQueryWrapper = new QueryWrapper<>();
+                judgeQueryWrapper.eq("pid", problem.getProblemId());
+                judgeQueryWrapper.eq("uid", userId);
+                boolean exists = judgeService.exists(judgeQueryWrapper);
+                if (exists) {
+                    judgeQueryWrapper.eq("status", 0);
+                    boolean isSolved = judgeService.exists(judgeQueryWrapper);
+                    problemSummaryVO.setStatus(isSolved ? 1 : -1);
                 } else {
                     problemSummaryVO.setStatus(0);
                 }
@@ -89,7 +115,8 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem>
 
         JSONObject res = new JSONObject();
         res.set("problems", items);
-        res.set("total", items.size());
+        res.set("total", pageResult.getTotal());
+        res.set("pages", pageResult.getPages());
         return res;
     }
 }

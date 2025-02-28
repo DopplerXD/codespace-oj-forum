@@ -2,9 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type UserLoginDto = {
+export type JudgeQueryDto = {
+    current?: number;
+    pid?: number;
+    cid?: number;
     username?: string;
-    password?: string;
-    rememberMe?: boolean;
+    status?: number;
+    language?: string;
 };
 

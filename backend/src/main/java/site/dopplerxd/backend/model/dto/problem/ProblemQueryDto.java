@@ -3,6 +3,7 @@ package site.dopplerxd.backend.model.dto.problem;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serial;
@@ -14,6 +15,7 @@ import java.util.List;
  * @time: 2025/2/27 15:17
  */
 @Data
+@AllArgsConstructor
 public class ProblemQueryDto implements Serializable {
 
     @Serial
@@ -22,7 +24,6 @@ public class ProblemQueryDto implements Serializable {
     /**
      * 当前页码
      */
-    @Min(value = 1, message = "页码不能小于1")
     private int current;
 
     /**

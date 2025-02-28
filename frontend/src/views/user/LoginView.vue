@@ -5,11 +5,20 @@
       :style="{ width: '600px' }"
       @submit="userLogin()"
     >
-      <a-form-item required field="用户名" label="用户名">
-        <a-input v-model="loginUser.username" placeholder="请输入用户名" />
+      <a-form-item field="用户名" label="用户名">
+        <a-input
+          v-model="loginUser.username"
+          placeholder="请输入用户名"
+          allow-clear
+        />
       </a-form-item>
-      <a-form-item required field="密码" label="密码">
-        <a-input v-model="loginUser.password" placeholder="请输入密码" />
+      <a-form-item field="密码" label="密码">
+        <a-input-password
+          v-model:visibility="visibility"
+          v-model="loginUser.password"
+          placeholder="请输入密码"
+          allow-clear
+        />
       </a-form-item>
       <a-form-item field="isRead">
         <a-checkbox v-model="loginUser.autoLogin"> 7 天内自动登录</a-checkbox>
@@ -38,6 +47,8 @@ import store from "@/store";
 
 const router = useRouter();
 const route = useRoute();
+
+const visibility = ref(true);
 
 const loginUser = ref({
   username: "",

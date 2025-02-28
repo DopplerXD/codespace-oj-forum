@@ -24,7 +24,18 @@ export class UserControllerService {
       method: "POST",
       url: "/user/register",
       body: requestBody,
-      mediaType: "application/json"
+      mediaType: "application/json",
+    });
+  }
+
+  /**
+   * @returns BaseResponseString OK
+   * @throws ApiError
+   */
+  public static userLogout(): CancelablePromise<BaseResponseString> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/user/logout",
     });
   }
 
@@ -40,7 +51,7 @@ export class UserControllerService {
       method: "POST",
       url: "/user/login",
       body: requestBody,
-      mediaType: "application/json"
+      mediaType: "application/json",
     });
   }
 
@@ -51,7 +62,7 @@ export class UserControllerService {
   public static getLoginUser(): CancelablePromise<BaseResponseLoginUserVO> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/user/get/login"
+      url: "/user/get/login",
     });
   }
 }
