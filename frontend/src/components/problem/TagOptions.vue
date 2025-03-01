@@ -30,6 +30,7 @@ const tags = [
   "搜索",
   "递归",
   "数据结构",
+  "test",
 ];
 </script>
 

@@ -18,15 +18,6 @@ export const routes: Array<RouteRecordRaw> = [
       ),
   },
   {
-    path: "/problems",
-    name: "题单",
-    component: () =>
-      import(
-        /* webpackChunkName: "problems" */ "../views/problem/ProblemsView.vue"
-      ),
-    meta: { hidden: true },
-  },
-  {
     path: "/blog",
     name: "博客",
     component: () =>
@@ -56,6 +47,15 @@ export const routes: Array<RouteRecordRaw> = [
     meta: { hidden: true }, // 不显示在导航栏中
   },
   {
+    path: "/problem/manage",
+    name: "管理题目",
+    component: () =>
+      import(
+        /* webpackChunkName: "ProblemManageView" */ "../views/problem/ProblemManageView.vue"
+      ),
+    meta: { access: ACCESS_ENUM.USER },
+  },
+  {
     path: "/admin/test",
     name: "管理员测试",
     component: () =>
@@ -81,12 +81,21 @@ export const routes: Array<RouteRecordRaw> = [
     meta: { hidden: true },
   },
   {
-    path: "/problem/manage",
-    name: "管理题目",
+    path: "/problem/create",
+    name: "创建题目",
     component: () =>
       import(
-        /* webpackChunkName: "ProblemManageView" */ "../views/problem/ProblemManageView.vue"
+        /* webpackChunkName: "ProblemInfoView" */ "../views/problem/ProblemCreateView.vue"
       ),
-    meta: { access: ACCESS_ENUM.USER },
+    meta: { hidden: true },
+  },
+  {
+    path: "/problem/update/:pid",
+    name: "更新题目",
+    component: () =>
+      import(
+        /* webpackChunkName: "ProblemInfoView" */ "../views/problem/ProblemUpdateView.vue"
+      ),
+    meta: { hidden: true },
   },
 ];

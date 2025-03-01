@@ -1,19 +1,17 @@
 <template>
   <div>
     <BasicComponent>
-      <div id="problem-description">
-        <h1>{{ problem?.title }}</h1>
-        <p>{{ problem?.description }}</p>
-      </div>
+      <ProblemEditForm :problem="problem" :is-new-problem="false" />
     </BasicComponent>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
 import { ProblemControllerService } from "../../../generated";
 import BasicComponent from "@/components/BasicComponent.vue";
+import ProblemEditForm from "@/components/problem/ProblemEditForm.vue";
 
 const route = useRoute();
 const problem = ref<any>();
@@ -25,12 +23,8 @@ onMounted(async () => {
 });
 
 const fetchProblemInfo = async (pid: string) => {
-  return ProblemControllerService.problemGet(pid);
+  return ProblemControllerService.problemGetDetail(pid);
 };
 </script>
 
-<style scoped>
-#problem-description {
-  padding: 10px;
-}
-</style>
+<style scoped></style>

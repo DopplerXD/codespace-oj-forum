@@ -32,6 +32,9 @@
           v-model="keyword"
           :press-enter="conditionalSearch()"
         />
+        <a-button type="primary" status="success" @click="problemCreate()">
+          创建题目</a-button
+        >
       </div>
     </BasicComponent>
     <BasicComponent>
@@ -68,6 +71,35 @@
           <template #difficulty="{ record }">
             <ProblemDifficultyTag :difficulty="record.difficulty" />
           </template>
+          <template #operation="{ record }">
+            <a-button
+              status="success"
+              @click="problemUpdate(record.problemId)"
+              style="margin-right: 10px"
+              >更新
+            </a-button>
+            <a-button
+              status="danger"
+              @click="problemDelete(record.problemId, record.title)"
+              style="margin-right: 10px"
+              >删除
+            </a-button>
+            <!--  删除题目确认框-->
+            <a-modal
+              v-model:visible="problemDeleteModalVisible"
+              @cancel="handleCancel()"
+              :on-before-ok="handleBeforeOk"
+              unmountOnClose
+            >
+              <template #title> 删除确认</template>
+              <div>
+                你确定要删除题目 [ ID：{{ deleteProblemId }}，标题：{{
+                  deleteProblemTitle
+                }}
+                ] 吗？
+              </div>
+            </a-modal>
+          </template>
         </a-table>
         <a-pagination
           :total="totalItems"
@@ -91,6 +123,7 @@ import ProblemTags from "@/components/problem/ProblemTags.vue";
 import ProblemDifficultyTag from "@/components/problem/ProblemDifficultyTag.vue";
 import BasicComponent from "@/components/BasicComponent.vue";
 import TagOptions from "@/components/problem/TagOptions.vue";
+import { Message } from "@arco-design/web-vue";
 
 // 定义响应式数据
 const problemList = ref<any[]>([]);
@@ -127,11 +160,6 @@ const difficultyOptions = reactive([
 // 定义表格列
 const columns = [
   {
-    title: "状态",
-    slotName: "status",
-    width: 60,
-  },
-  {
     title: "题目 ID",
     dataIndex: "problemId",
     key: "problemId",
@@ -143,7 +171,7 @@ const columns = [
   {
     title: "题目标题",
     slotName: "title",
-    width: 500,
+    width: 460,
     sortable: {
       sortDirections: ["ascend", "descend"],
     },
@@ -169,7 +197,17 @@ const columns = [
       sortDirections: ["ascend", "descend"],
     },
   },
+  {
+    title: "操作",
+    slotName: "operation",
+    width: 180,
+  },
 ];
+
+// 删除题目确认框
+const problemDeleteModalVisible = ref(false);
+const deleteProblemId = ref("");
+const deleteProblemTitle = ref("");
 
 // 挂载时获取第一页数据
 onMounted(() => {
@@ -222,6 +260,61 @@ const conditionalSearch = async () => {
   } catch (error) {
     console.error("请求出错:", error);
   }
+};
+
+/*
+ * 新增题目
+ */
+const problemCreate = async () => {
+  router.push({
+    path: "/problem/create",
+  });
+};
+
+/**
+ * 删除题目
+ */
+const problemDelete = (problemId: string, problemTitle: string) => {
+  deleteProblemId.value = problemId;
+  deleteProblemTitle.value = problemTitle;
+  problemDeleteModalVisible.value = true;
+};
+
+const handleBeforeOk = async () => {
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log(deleteProblemId.value);
+    const res = await ProblemControllerService.problemDelete({
+      problemId: deleteProblemId.value,
+    });
+    if (res.code === 0) {
+      Message.success("删除成功");
+      problemDeleteModalVisible.value = false;
+      await conditionalSearch();
+      return true;
+    } else {
+      Message.error("删除失败，" + res.message);
+      return false;
+    }
+  } catch (error) {
+    Message.error("删除失败，发生未知错误");
+    return false;
+  }
+};
+
+const handleCancel = () => {
+  problemDeleteModalVisible.value = false;
+};
+
+/**
+ * 更新题目
+ *
+ * @param problemId
+ */
+const problemUpdate = (problemId: string) => {
+  router.push({
+    path: "/problem/update/" + problemId,
+  });
 };
 </script>
 

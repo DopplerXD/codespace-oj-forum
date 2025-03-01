@@ -7,10 +7,8 @@ router.beforeEach(async (to, from, next) => {
   // 在应用启动时检查 localStorage 中的 token
   const token = localStorage.getItem("token");
   if (token) {
-    // 将 token 存储到 Vuex 中
-    store.commit("user/updateUser", { token });
     // 尝试获取登录用户信息
-    store
+    await store
       .dispatch("user/getLoginUser")
       .then(() => {
         // 获取用户信息成功
@@ -28,6 +26,7 @@ router.beforeEach(async (to, from, next) => {
   }
   const loginUser = store.state.user.loginUser;
   const needAccess = (to.meta?.access as string) ?? ACCESS_ENUM.NOT_LOGIN;
+
   // 要跳转的页面必须要登陆
   if (needAccess !== ACCESS_ENUM.NOT_LOGIN) {
     // 如果没登陆，跳转到登录页面

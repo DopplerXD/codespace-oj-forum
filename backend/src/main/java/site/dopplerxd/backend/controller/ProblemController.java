@@ -18,9 +18,11 @@ import site.dopplerxd.backend.common.ResultUtils;
 import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.exception.ThrowUtils;
 import site.dopplerxd.backend.model.dto.problem.ProblemCreateDto;
+import site.dopplerxd.backend.model.dto.problem.ProblemDeleteDto;
 import site.dopplerxd.backend.model.dto.problem.ProblemQueryDto;
 import site.dopplerxd.backend.model.dto.problem.ProblemUpdateDto;
 import site.dopplerxd.backend.model.entity.Problem;
+import site.dopplerxd.backend.model.vo.ProblemEditVO;
 import site.dopplerxd.backend.model.vo.ProblemVO;
 import site.dopplerxd.backend.service.ProblemService;
 import site.dopplerxd.backend.utils.JwtUtils;
@@ -99,11 +101,6 @@ public class ProblemController {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
 
-        QueryWrapper<Problem> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("problem_id", problemUpdateDto.getProblemId());
-        if (problemService.exists(queryWrapper)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "题目ID已存在");
-        }
         BeanUtil.copyProperties(problemUpdateDto, problem);
         List<String> tags = problemUpdateDto.getTags();
         if (tags != null) {
@@ -121,18 +118,21 @@ public class ProblemController {
     /**
      * 删除题目（创建者或管理员）
      *
-     * @param pid
+     * @param problemDeleteDto
      * @param request
      * @return
      */
     @PreAuthorize("hasAnyRole('user', 'admin')")
     @PostMapping("/delete")
-    public BaseResponse<Boolean> problemDelete(@RequestBody String pid, HttpServletRequest request) {
+    public BaseResponse<Boolean> problemDelete(@RequestBody ProblemDeleteDto problemDeleteDto, HttpServletRequest request) {
+        String pid = problemDeleteDto.getProblemId();
         if (pid == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         // 管理员或题目创建者才能删除
-        Problem problem = problemService.getById(pid);
+        QueryWrapper<Problem> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("problem_id", pid);
+        Problem problem = problemService.getOne(queryWrapper);
         if (problem == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "题目不存在");
         }
@@ -141,7 +141,7 @@ public class ProblemController {
         if (!username.equals(problem.getAuthor()) && !"admin".equals(role)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
-        return ResultUtils.success(problemService.removeById(pid));
+        return ResultUtils.success(problemService.removeById(problem.getId()));
     }
 
     /**
@@ -150,13 +150,36 @@ public class ProblemController {
      * @param pid
      * @return
      */
-    @GetMapping("/{pid}")
+    @GetMapping("/get/summary/{pid}")
     public BaseResponse<ProblemVO> problemGet(@PathVariable("pid") String pid) {
         if (pid == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         ProblemVO problemVO = problemService.getByPid(pid);
         return ResultUtils.success(problemVO);
+    }
+
+    /**
+     * 获取题目详细信息（编辑）（创建者或管理员）
+     *
+     * @param pid
+     * @param request
+     * @return
+     */
+    @PreAuthorize("hasAnyRole('user', 'admin')")
+    @GetMapping("/get/detail/{pid}")
+    public BaseResponse<ProblemEditVO> problemGetDetail(@PathVariable("pid") String pid, HttpServletRequest request) {
+        System.out.println("pid: " + pid);
+        if (pid == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        ProblemEditVO problemEditVO = problemService.getDetailByPid(pid);
+        String username = JwtUtils.getUsernameFromRequest(request);
+        String role = JwtUtils.getRoleFromRequest(request);
+        if (!username.equals(problemEditVO.getAuthor()) && !"admin".equals(role)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        return ResultUtils.success(problemEditVO);
     }
 
     /**

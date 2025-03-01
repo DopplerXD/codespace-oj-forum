@@ -5,8 +5,10 @@
 import type { BaseResponseBoolean } from "../models/BaseResponseBoolean";
 import type { BaseResponseJSONObject } from "../models/BaseResponseJSONObject";
 import type { BaseResponseLong } from "../models/BaseResponseLong";
+import type { BaseResponseProblemEditVO } from "../models/BaseResponseProblemEditVO";
 import type { BaseResponseProblemVO } from "../models/BaseResponseProblemVO";
 import type { ProblemCreateDto } from "../models/ProblemCreateDto";
+import type { ProblemDeleteDto } from "../models/ProblemDeleteDto";
 import type { ProblemUpdateDto } from "../models/ProblemUpdateDto";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
@@ -35,7 +37,7 @@ export class ProblemControllerService {
    * @throws ApiError
    */
   public static problemDelete(
-    requestBody: string
+    requestBody: ProblemDeleteDto
   ): CancelablePromise<BaseResponseBoolean> {
     return __request(OpenAPI, {
       method: "POST",
@@ -62,23 +64,6 @@ export class ProblemControllerService {
   }
 
   /**
-   * @param pid
-   * @returns BaseResponseProblemVO OK
-   * @throws ApiError
-   */
-  public static problemGet(
-    pid: string
-  ): CancelablePromise<BaseResponseProblemVO> {
-    return __request(OpenAPI, {
-      method: "GET",
-      url: "/problem/{pid}",
-      path: {
-        pid: pid,
-      },
-    });
-  }
-
-  /**
    * @param current
    * @param difficulty
    * @param tags
@@ -100,6 +85,40 @@ export class ProblemControllerService {
         difficulty: difficulty,
         tags: tags,
         keyword: keyword,
+      },
+    });
+  }
+
+  /**
+   * @param pid
+   * @returns BaseResponseProblemVO OK
+   * @throws ApiError
+   */
+  public static problemGet(
+    pid: string
+  ): CancelablePromise<BaseResponseProblemVO> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/problem/get/summary/{pid}",
+      path: {
+        pid: pid,
+      },
+    });
+  }
+
+  /**
+   * @param pid
+   * @returns BaseResponseProblemEditVO OK
+   * @throws ApiError
+   */
+  public static problemGetDetail(
+    pid: string
+  ): CancelablePromise<BaseResponseProblemEditVO> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/problem/get/detail/{pid}",
+      path: {
+        pid: pid,
       },
     });
   }

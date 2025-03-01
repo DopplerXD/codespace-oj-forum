@@ -13,6 +13,7 @@ import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.model.dto.problem.ProblemQueryDto;
 import site.dopplerxd.backend.model.entity.Judge;
 import site.dopplerxd.backend.model.entity.Problem;
+import site.dopplerxd.backend.model.vo.ProblemEditVO;
 import site.dopplerxd.backend.model.vo.ProblemSummaryVO;
 import site.dopplerxd.backend.model.vo.ProblemVO;
 import site.dopplerxd.backend.service.JudgeService;
@@ -49,6 +50,23 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem>
         ProblemVO problemVO = new ProblemVO();
         BeanUtils.copyProperties(problem, problemVO);
         return problemVO;
+    }
+
+    @Override
+    public ProblemEditVO getDetailByPid(String pid) {
+        if (pid == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        QueryWrapper<Problem> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("problem_id", pid);
+        Problem problem = this.getOne(queryWrapper);
+        if (problem == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        ProblemEditVO problemEditVO = new ProblemEditVO();
+        BeanUtils.copyProperties(problem, problemEditVO);
+        // TODO: 将 json 字符串数组 转为 List<String>
+        return problemEditVO;
     }
 
     @Override
