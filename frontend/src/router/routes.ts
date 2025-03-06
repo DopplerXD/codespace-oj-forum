@@ -1,6 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
 import ACCESS_ENUM from "@/access/accessEnum";
-import { meta } from "@typescript-eslint/parser";
 
 export const routes: Array<RouteRecordRaw> = [
   {

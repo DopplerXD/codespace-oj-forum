@@ -265,7 +265,7 @@ const conditionalSearch = async () => {
 /*
  * 新增题目
  */
-const problemCreate = async () => {
+const problemCreate = () => {
   router.push({
     path: "/problem/create",
   });

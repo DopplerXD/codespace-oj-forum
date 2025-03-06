@@ -23,13 +23,16 @@
         <a-input v-model="problem.title" allow-clear show-word-limit />
       </a-form-item>
       <a-form-item field="description" label="题目描述">
-        <a-textarea v-model="problem.description" allow-clear show-word-limit />
+        <!--        <a-textarea v-model="problem.description" allow-clear show-word-limit />-->
+        <MdEditor v-model="problem.description" />
       </a-form-item>
       <a-form-item field="input" label="输入描述">
-        <a-textarea v-model="problem.input" allow-clear show-word-limit />
+        <!--        <a-textarea v-model="problem.input" allow-clear show-word-limit />-->
+        <MdEditor v-model="problem.input" />
       </a-form-item>
       <a-form-item field="output" label="输出描述">
-        <a-textarea v-model="problem.output" allow-clear show-word-limit />
+        <!--        <a-textarea v-model="problem.output" allow-clear show-word-limit />-->
+        <MdEditor v-model="problem.output" />
       </a-form-item>
       <a-form-item
         field="difficulty"
@@ -132,7 +135,7 @@
       <a-form-item>
         <a-space>
           <a-button type="primary" html-type="submit">提交</a-button>
-          <a-button @click="$refs.formRef.resetFields()">重置</a-button>
+          <a-button @click="resetForm()">重置</a-button>
         </a-space>
       </a-form-item>
     </a-form>
@@ -144,7 +147,9 @@ import { defineProps, reactive, watch } from "vue";
 import TagOptions from "@/components/problem/TagOptions.vue";
 import { ProblemControllerService } from "../../../generated";
 import router from "@/router";
-import { Message } from "@arco-design/web-vue";
+import { Message, Modal } from "@arco-design/web-vue";
+import { MdEditor } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 
 let problem = reactive({
   id: 0,
@@ -172,6 +177,18 @@ const props = defineProps<{
   problem: any;
   isNewProblem: boolean;
 }>();
+
+const handleDescriptionChange = (v: string) => {
+  problem.description = v;
+};
+
+const handleInputChange = (v: string) => {
+  problem.input = v;
+};
+
+const handleOutputChange = (v: string) => {
+  problem.output = v;
+};
 
 // 监听 props.problem 的变化
 watch(
@@ -213,6 +230,42 @@ const createOrUpdateProblem = async () => {
       Message.error("题目更新失败：" + res.message);
     }
   }
+};
+
+const resetForm = () => {
+  Modal.confirm({
+    title: "重置确认",
+    content: "确定要重置内容吗？",
+    onOk: () => {
+      if (props.isNewProblem) {
+        // 新建题目，重置为初始值
+        problem = reactive({
+          id: 0,
+          problemId: "",
+          title: "",
+          type: 0,
+          timeLimit: 0,
+          memoryLimit: 0,
+          stackLimit: 0,
+          description: "",
+          input: "",
+          output: "",
+          examples: "",
+          tags: [],
+          isRemote: 0,
+          source: "",
+          difficulty: 3,
+          hint: "",
+          auth: 1,
+          ioScore: 0,
+          codeShare: 1,
+        });
+      } else {
+        // 编辑已有题目，重置为 props.problem
+        Object.assign(problem, props.problem);
+      }
+    },
+  });
 };
 </script>
 

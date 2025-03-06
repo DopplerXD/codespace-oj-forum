@@ -7,7 +7,6 @@ import router from "./router";
 import store from "./store";
 import "@/access";
 import instance from "@/plugins/axios";
-// import { Message } from "@arco-design/web-vue";
 
 const app = createApp(App);
 
