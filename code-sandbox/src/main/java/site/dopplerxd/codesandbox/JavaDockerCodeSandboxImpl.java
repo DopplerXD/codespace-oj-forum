@@ -13,6 +13,7 @@ import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.command.ExecStartResultCallback;
 import com.github.dockerjava.okhttp.OkHttpDockerCmdExecFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import site.dopplerxd.codesandbox.model.ExecuteCodeRequest;
 import site.dopplerxd.codesandbox.model.ExecuteCodeResponse;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class JavaDockerCodeSandboxImpl extends JavaCodeSandboxTemplate {
 
     private static final long TIME_OUT = (long) (2000L * 1.2);
@@ -51,9 +53,10 @@ public class JavaDockerCodeSandboxImpl extends JavaCodeSandboxTemplate {
         long maxTime = 0L;
         long maxMemory = 0L;
         for (ExecuteMessage executeMessage : executeMessageList) {
-            String errorExecuteMessage = executeMessage.getMessage();
+            String errorExecuteMessage = executeMessage.getErrorMessage();
             if (StrUtil.isNotBlank(errorExecuteMessage)) { // 有错误信息
                 executeCodeResponse.setMessage(errorExecuteMessage);
+                System.out.println("错误信息: " + errorExecuteMessage);
                 // 执行中存在错误
                 executeCodeResponse.setStatus(3); // TODO: 修改枚举值
                 break;
@@ -72,6 +75,7 @@ public class JavaDockerCodeSandboxImpl extends JavaCodeSandboxTemplate {
             executeCodeResponse.setStatus(1);
         }
 
+        executeCodeResponse.setMessage("正常运行完成");
         executeCodeResponse.setOutputList(outputList);
         executeCodeResponse.setTime(maxTime);
         executeCodeResponse.setMemory(maxMemory);
@@ -173,7 +177,7 @@ public class JavaDockerCodeSandboxImpl extends JavaCodeSandboxTemplate {
                 @Override
                 public void onNext(Statistics statistics) {
                     long memory = statistics.getMemoryStats().getUsage();
-                    System.out.println("内存占用：" + memory);
+//                    System.out.println("内存占用：" + memory);
                     maxMemory[0] = Math.max(maxMemory[0], memory);
 
                 }

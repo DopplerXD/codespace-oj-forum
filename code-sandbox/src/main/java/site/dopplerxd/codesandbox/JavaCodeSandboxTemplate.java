@@ -134,6 +134,8 @@ public abstract class JavaCodeSandboxTemplate implements CodeSandbox {
         if (outputList.size() == executeMessageList.size()) {
             executeCodeResponse.setStatus(1);
         }
+
+        executeCodeResponse.setMessage("正常运行完成");
         executeCodeResponse.setOutputList(outputList);
         executeCodeResponse.setTime(maxTime);
         executeCodeResponse.setMemory(999L);

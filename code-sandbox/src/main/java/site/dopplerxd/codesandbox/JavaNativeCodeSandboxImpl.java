@@ -1,12 +1,14 @@
 package site.dopplerxd.codesandbox;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import org.springframework.stereotype.Component;
 import site.dopplerxd.codesandbox.model.ExecuteCodeRequest;
 import site.dopplerxd.codesandbox.model.ExecuteCodeResponse;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+@Component
 public class JavaNativeCodeSandboxImpl extends JavaCodeSandboxTemplate {
 
     public static void main(String[] args) {
