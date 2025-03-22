@@ -122,7 +122,7 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
         // 4. 收集整理输出结果
         ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
         List<String> outputList = new ArrayList<>();
-        Long maxTime = 0L;
+        long maxTime = 0L;
         for (ExecuteMessage executeMessage : executeMessageList) {
             String errorExecuteMessage = executeMessage.getMessage();
             if (StrUtil.isNotBlank(errorExecuteMessage)) {
