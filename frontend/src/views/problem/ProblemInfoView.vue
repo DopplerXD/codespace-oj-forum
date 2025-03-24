@@ -91,7 +91,7 @@ const scrollElement = document.documentElement;
 const code = ref("");
 const cmRef = ref<CmComponentRef>();
 const cmOptions: EditorConfiguration = {
-  mode: "text/x-c++src",
+  mode: "text/x-java",
 };
 const highlightLanguage = ref("cpp");
 
@@ -121,12 +121,19 @@ const fetchProblemInfo = async (pid: string) => {
 };
 
 const submitJudge = () => {
-  console.log("submitJudge");
+  console.log("submitJudge, id: " + problem.value.id);
   // TODO: 提交代码
+  const judgeId = ProblemControllerService.judgeSubmit({
+    code: code.value,
+    language: highlightLanguage.value,
+    pid: problem.value.id,
+    share: 1,
+  });
+  console.log("submitJudge: " + problem.value.id + ", " + judgeId);
 };
 
 const changeLanguage = () => {
-  let mode = "text/x-c++src"; // 默认模式
+  let mode = "text/x-java"; // 默认模式
   switch (highlightLanguage.value) {
     case "cpp":
       mode = "text/x-c++src";

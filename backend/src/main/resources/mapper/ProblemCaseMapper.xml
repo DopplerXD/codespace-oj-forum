@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.dopplerxd.backend.mapper.ProblemCaseMapper">
+
+    <resultMap id="BaseResultMap" type="site.dopplerxd.backend.model.entity.ProblemCase">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <id property="pid" column="pid" jdbcType="BIGINT"/>
+            <result property="cases" column="cases" jdbcType="VARCHAR"/>
+            <result property="gmt_create" column="gmt_create" jdbcType="TIMESTAMP"/>
+            <result property="gmt_modified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,pid,cases,
+        gmt_create,gmt_modified
+    </sql>
+</mapper>

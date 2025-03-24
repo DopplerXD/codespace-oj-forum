@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
 import site.dopplerxd.backend.judge.codesandbox.impl.RemoteCodeSandbox;
 import site.dopplerxd.backend.judge.codesandbox.model.ExecuteCodeRequest;
 import site.dopplerxd.backend.judge.codesandbox.model.ExecuteCodeResponse;
@@ -19,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author: <a href="https://github.com/DopplerXD">doppleryxc</a>
  * @time: 2025/3/9 14:48
  */
-@SpringBootTest
+@SpringBootTest(classes = {CodeSandboxTest.class}, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+//@SpringBootTest
 class CodeSandboxTest {
 
     @Value("${codesandbox.type}")
@@ -59,7 +61,13 @@ class CodeSandboxTest {
     void codeSandboxProxy() {
         CodeSandbox codeSandbox = CodeSandboxFactory.newInstance(type);
         codeSandbox = new CodeSandboxProxy(codeSandbox);
-        String code = "int main() { }";
+        String code = "public class Main {\n" +
+                "    public static void main(String[] args) {\n" +
+                "        int a = Integer.parseInt(args[0]);\n" +
+                "        int b = Integer.parseInt(args[1]);\n" +
+                "        System.out.println(\"结果:\" + (a + b));\n" +
+                "    }\n" +
+                "}";
         String language = JudgeSubmitLanguage.JAVA.getValue();
         List<String> inputList = Arrays.asList("1 2", "3 4");
         ExecuteCodeRequest executeCodeRequest = ExecuteCodeRequest.builder()

@@ -16,12 +16,10 @@ public enum JudgeSubmitStatus {
     STATUS_PRESENTATION_ERROR(-3, "输出格式错误"),
     STATUS_WRONG_ANSWER(-1, "答案错误"),
     STATUS_ACCEPTED(0, "评测通过"),
-    STATUS_CPU_TIME_LIMIT_EXCEEDED(1, "cpu时间超限"),
-    STATUS_REAL_TIME_LIMIT_EXCEEDED(2, "真实时间超限"),
+    STATUS_TIME_LIMIT_EXCEEDED(1, "时间超限"),
     STATUS_MEMORY_LIMIT_EXCEEDED(3, "空间超限"),
     STATUS_RUNTIME_ERROR(4, "运行错误"),
     STATUS_SYSTEM_ERROR(5, "系统错误"),
-    STATUS_PARTIAL_ACCEPTED(8, "OI评测部分通过"),
     STATUS_SUBMITTED_FAILED(10, "提交失败");
 
     /**

@@ -62,17 +62,17 @@
         </a-select>
       </a-form-item>
       <a-form-item field="hint" label="提示">
-        <a-textarea v-model="problem.hint" allow-clear show-word-limit />
+        <MdEditor v-model="problem.hint" />
       </a-form-item>
       <a-space>
-        <a-form-item field="timeLimit" label="时间限制">
+        <a-form-item field="timeLimit" label="时间限制（ms）">
           <a-input
             v-model="problem.timeLimit"
             style="width: 120px"
             allow-clear
           />
         </a-form-item>
-        <a-form-item field="memoryLimit" label="内存限制">
+        <a-form-item field="memoryLimit" label="内存限制（b）">
           <a-input
             v-model="problem.memoryLimit"
             style="width: 120px"

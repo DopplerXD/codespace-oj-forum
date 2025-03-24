@@ -1,9 +1,7 @@
 package site.dopplerxd.backend.model.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import java.io.Serial;
@@ -15,10 +13,9 @@ import java.util.Date;
  * @time: 2025/2/27 14:59
  */
 @Data
-public class JudgeVO implements Serializable {
+public class JudgeSummaryVO implements Serializable {
 
-    @TableId(value = "submit_id")
-    private Long submitId;
+    private String submitId;
 
     /**
      * 题目id
@@ -45,28 +42,16 @@ public class JudgeVO implements Serializable {
     private Integer status;
 
     /**
-     * 0为仅自己可见，1为全部人可见。
-     */
-    @TableField(value = "share")
-    private Integer share;
-
-    /**
-     * 错误提醒（编译错误，或者vj提醒）
-     */
-    @TableField(value = "error_message")
-    private String errorMessage;
-
-    /**
      * 运行时间(ms)
      */
     @TableField(value = "time")
-    private Integer time;
+    private Long time;
 
     /**
      * 运行内存（kb）
      */
     @TableField(value = "memory")
-    private Integer memory;
+    private Long memory;
 
     /**
      * IO判题则不为空
@@ -75,34 +60,10 @@ public class JudgeVO implements Serializable {
     private Integer score;
 
     /**
-     * 代码长度
-     */
-    @TableField(value = "length")
-    private Integer length;
-
-    /**
-     * 代码
-     */
-    @TableField(value = "code")
-    private String code;
-
-    /**
      * 代码语言
      */
     @TableField(value = "language")
     private String language;
-
-    /**
-     * vjudge判题在其它oj的提交id
-     */
-    @TableField(value = "vjudge_submit_id")
-    private Long vjudgeSubmitId;
-
-    /**
-     * vjudge判题在其它oj的提交用户名
-     */
-    @TableField(value = "vjudge_username")
-    private String vjudgeUsername;
 
     @Serial
     @TableField(exist = false)

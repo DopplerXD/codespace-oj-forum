@@ -15,6 +15,11 @@ import java.io.Serializable;
 public class ProblemVO implements Serializable {
 
     /**
+     * 问题ID bigint
+     */
+    private Long id;
+
+    /**
      * 问题的自定义ID 例如（HOJ-1000）
      */
     @TableField(value = "problem_id")

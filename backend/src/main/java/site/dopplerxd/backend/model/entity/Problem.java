@@ -68,6 +68,12 @@ public class Problem implements Serializable {
     private Integer stackLimit;
 
     /**
+     * 测试样例id
+     */
+    @TableField(value = "problem_case_id")
+    private Long problemCaseId;
+
+    /**
      * 描述
      */
     @TableField(value = "description")

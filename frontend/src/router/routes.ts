@@ -24,6 +24,14 @@ export const routes: Array<RouteRecordRaw> = [
     meta: { hidden: true },
   },
   {
+    path: "/record/list",
+    name: "评测列表",
+    component: () =>
+      import(
+        /* webpackChunkName: "JudgeListView" */ "../views/judge/JudgeListView.vue"
+      ),
+  },
+  {
     path: "/about",
     name: "关于",
     component: () =>
@@ -94,6 +102,15 @@ export const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(
         /* webpackChunkName: "ProblemInfoView" */ "../views/problem/ProblemUpdateView.vue"
+      ),
+    meta: { hidden: true },
+  },
+  {
+    path: "/record/:submitId",
+    name: "评测记录",
+    component: () =>
+      import(
+        /* webpackChunkName: "JudgeInfoView" */ "../views/judge/JudgeInfoView.vue"
       ),
     meta: { hidden: true },
   },

@@ -4,8 +4,6 @@
 /* eslint-disable */
 export type JudgeSubmitDto = {
     pid: number;
-    uid?: string;
-    cid?: number;
     username?: string;
     share?: number;
     code: string;

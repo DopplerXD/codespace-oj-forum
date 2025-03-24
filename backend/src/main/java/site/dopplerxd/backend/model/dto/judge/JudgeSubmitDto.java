@@ -27,16 +27,10 @@ public class JudgeSubmitDto implements Serializable {
     @NotNull(message = "题目ID不能为空")
     private Long pid;
 
-    /**
-     * 用户id 从token获取
-     */
-//    @NotBlank(message = "用户ID不能为空")
-    private String uid;
-
-    /**
-     * 比赛id，非比赛题目默认为0
-     */
-    private Long cid;
+//    /**
+//     * 题目自定义id
+//     */
+//    private String pid;
 
     /**
      * 用户名

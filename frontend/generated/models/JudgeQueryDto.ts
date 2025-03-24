@@ -3,11 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type JudgeQueryDto = {
-    current?: number;
-    pid?: number;
-    cid?: number;
-    username?: string;
-    status?: number;
-    language?: string;
+  current?: number;
+  pid?: string;
+  username?: string;
+  status?: number;
+  language?: string;
 };
 

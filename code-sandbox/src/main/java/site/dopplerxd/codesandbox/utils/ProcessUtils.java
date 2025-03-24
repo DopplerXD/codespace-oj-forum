@@ -1,10 +1,14 @@
 package site.dopplerxd.codesandbox.utils;
 
 import cn.hutool.core.util.StrUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.util.StopWatch;
 import site.dopplerxd.codesandbox.model.ExecuteMessage;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 进程工具类
@@ -33,30 +37,36 @@ public class ProcessUtils {
                 System.out.println(opName + "成功");
                 // 分批获取线程的正常输出
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-                StringBuilder compileOutputStringBuilder = new StringBuilder();
+                List<String> outputList = new ArrayList<>();
+//                StringBuilder compileOutputStringBuilder = new StringBuilder();
                 String compileOutputLine;
                 while ((compileOutputLine = bufferedReader.readLine()) != null) {
-                    compileOutputStringBuilder.append(compileOutputLine);
+//                    compileOutputStringBuilder.append(compileOutputLine);
+                    outputList.add(compileOutputLine);
                 }
-                executeMessage.setMessage(compileOutputStringBuilder.toString());
+                executeMessage.setMessage(StringUtils.join(outputList, "\n"));
             } else {
                 System.out.println(opName + "失败，错误码：" + exitValue);
                 // 分批获取线程的正常输出
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-                StringBuilder compileOutputStringBuilder = new StringBuilder();
+                List<String> outputList = new ArrayList<>();
+//                StringBuilder compileOutputStringBuilder = new StringBuilder();
                 String compileOutputLine;
                 while ((compileOutputLine = bufferedReader.readLine()) != null) {
-                    compileOutputStringBuilder.append(compileOutputLine);
+//                    compileOutputStringBuilder.append(compileOutputLine);
+                    outputList.add(compileOutputLine);
                 }
-                executeMessage.setMessage(compileOutputStringBuilder.toString());
+                executeMessage.setMessage(StringUtils.join(outputList, "\n"));
                 // 分批获取线程的错误输出
                 BufferedReader errorBufferedReader = new BufferedReader(new InputStreamReader(runProcess.getErrorStream()));
-                StringBuilder errorCompileOutputStringBuilder = new StringBuilder();
+                List<String> errorOutputList = new ArrayList<>();
+//                StringBuilder errorCompileOutputStringBuilder = new StringBuilder();
                 String errorCompileOutputLine;
                 while ((errorCompileOutputLine = errorBufferedReader.readLine()) != null) {
-                    errorCompileOutputStringBuilder.append(errorCompileOutputLine);
+//                    errorCompileOutputStringBuilder.append(errorCompileOutputLine);
+                    errorOutputList.add(errorCompileOutputLine);
                 }
-                executeMessage.setMessage(errorCompileOutputStringBuilder.toString());
+                executeMessage.setErrorMessage(StringUtils.join(errorOutputList, "\n"));
             }
             stopWatch.stop();
             executeMessage.setTime(stopWatch.getTotalTimeMillis());

@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ProblemVO = {
+    id?: number;
     problemId?: string;
     title?: string;
     author?: string;

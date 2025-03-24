@@ -27,8 +27,9 @@ import java.util.Objects;
  * @time: 2025/2/21 16:19
  */
 @RestController
-@RequestMapping("/judge")
+//@RequestMapping("/judge")
 @Slf4j
+@Deprecated
 public class JudgeController {
 
     @Resource
@@ -61,6 +62,11 @@ public class JudgeController {
         return ResultUtils.success(newJudgeId);
     }
 
+    /**
+     * 根据ID获取提交
+     * @param judgeId
+     * @return
+     */
     @GetMapping("/get/{judgeId}")
     public BaseResponse<JudgeVO> judgeGet(@PathVariable("judgeId") long judgeId) {
         Judge judge = judgeService.getById(judgeId);
@@ -72,8 +78,14 @@ public class JudgeController {
         return ResultUtils.success(judgeVO);
     }
 
+    /**
+     * 获取提交列表
+     * @param judgeQueryDto
+     * @param request
+     * @return
+     */
     @GetMapping("/list")
     public BaseResponse<JSONObject> judgeGetList(@Validated @RequestParam JudgeQueryDto judgeQueryDto, HttpServletRequest request) {
-        return ResultUtils.success(judgeService.getJudgeList(judgeQueryDto, JwtUtils.getUserIdFromRequest(request)));
+        return ResultUtils.success(judgeService.getJudgeList(judgeQueryDto));
     }
 }

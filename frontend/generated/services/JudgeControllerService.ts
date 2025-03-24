@@ -13,6 +13,7 @@ import { request as __request } from "../core/request";
 
 export class JudgeControllerService {
   /**
+   * @deprecated
    * @param requestBody
    * @returns BaseResponseLong OK
    * @throws ApiError
@@ -22,23 +23,24 @@ export class JudgeControllerService {
   ): CancelablePromise<BaseResponseLong> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/judge/submit",
+      url: "/api/submit",
       body: requestBody,
       mediaType: "application/json",
     });
   }
 
   /**
+   * @deprecated
    * @param judgeQueryDto
    * @returns BaseResponseJSONObject OK
    * @throws ApiError
    */
-  public static judgeGetList(
+  public static judgeGetList1(
     judgeQueryDto: JudgeQueryDto
   ): CancelablePromise<BaseResponseJSONObject> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/judge/list",
+      url: "/api/list",
       query: {
         judgeQueryDto: judgeQueryDto,
       },
@@ -46,16 +48,17 @@ export class JudgeControllerService {
   }
 
   /**
+   * @deprecated
    * @param judgeId
    * @returns BaseResponseJudgeVO OK
    * @throws ApiError
    */
-  public static judgeGet(
+  public static judgeGet1(
     judgeId: number
   ): CancelablePromise<BaseResponseJudgeVO> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/judge/get/{judgeId}",
+      url: "/api/get/{judgeId}",
       path: {
         judgeId: judgeId,
       },

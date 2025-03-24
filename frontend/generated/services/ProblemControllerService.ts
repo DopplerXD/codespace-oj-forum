@@ -4,9 +4,11 @@
 /* eslint-disable */
 import type { BaseResponseBoolean } from "../models/BaseResponseBoolean";
 import type { BaseResponseJSONObject } from "../models/BaseResponseJSONObject";
+import type { BaseResponseJudgeVO } from "../models/BaseResponseJudgeVO";
 import type { BaseResponseLong } from "../models/BaseResponseLong";
 import type { BaseResponseProblemEditVO } from "../models/BaseResponseProblemEditVO";
 import type { BaseResponseProblemVO } from "../models/BaseResponseProblemVO";
+import type { JudgeSubmitDto } from "../models/JudgeSubmitDto";
 import type { ProblemCreateDto } from "../models/ProblemCreateDto";
 import type { ProblemDeleteDto } from "../models/ProblemDeleteDto";
 import type { ProblemUpdateDto } from "../models/ProblemUpdateDto";
@@ -25,7 +27,23 @@ export class ProblemControllerService {
   ): CancelablePromise<BaseResponseBoolean> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/problem/update",
+      url: "/api/problem/update",
+      body: requestBody,
+      mediaType: "application/json",
+    });
+  }
+
+  /**
+   * @param requestBody
+   * @returns BaseResponseLong OK
+   * @throws ApiError
+   */
+  public static judgeSubmit(
+    requestBody: JudgeSubmitDto
+  ): CancelablePromise<BaseResponseLong> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/problem/submit/judge",
       body: requestBody,
       mediaType: "application/json",
     });
@@ -41,7 +59,7 @@ export class ProblemControllerService {
   ): CancelablePromise<BaseResponseBoolean> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/problem/delete",
+      url: "/api/problem/delete",
       body: requestBody,
       mediaType: "application/json",
     });
@@ -57,9 +75,26 @@ export class ProblemControllerService {
   ): CancelablePromise<BaseResponseLong> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/problem/create",
+      url: "/api/problem/create",
       body: requestBody,
       mediaType: "application/json",
+    });
+  }
+
+  /**
+   * @param pid
+   * @returns BaseResponseProblemVO OK
+   * @throws ApiError
+   */
+  public static problemGet(
+    pid: string
+  ): CancelablePromise<BaseResponseProblemVO> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/problem/get/summary/{pid}",
+      path: {
+        pid: pid,
+      },
     });
   }
 
@@ -79,7 +114,7 @@ export class ProblemControllerService {
   ): CancelablePromise<BaseResponseJSONObject> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/problem/list",
+      url: "/api/problem/get/problem/list",
       query: {
         current: current,
         difficulty: difficulty,
@@ -90,18 +125,47 @@ export class ProblemControllerService {
   }
 
   /**
-   * @param pid
-   * @returns BaseResponseProblemVO OK
+   * @param judgeId
+   * @returns BaseResponseJudgeVO OK
    * @throws ApiError
    */
-  public static problemGet(
-    pid: string
-  ): CancelablePromise<BaseResponseProblemVO> {
+  public static judgeGet(
+    judgeId: number
+  ): CancelablePromise<BaseResponseJudgeVO> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/problem/get/summary/{pid}",
+      url: "/api/problem/get/judge/{judgeId}",
       path: {
-        pid: pid,
+        judgeId: judgeId,
+      },
+    });
+  }
+
+  /**
+   * @param current
+   * @param problemId
+   * @param username
+   * @param status
+   * @param language
+   * @returns BaseResponseJSONObject OK
+   * @throws ApiError
+   */
+  public static judgeGetList(
+    current: number = 1,
+    problemId?: number,
+    username?: string,
+    status?: number,
+    language?: string
+  ): CancelablePromise<BaseResponseJSONObject> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/problem/get/judge/list",
+      query: {
+        current: current,
+        problemId: problemId,
+        username: username,
+        status: status,
+        language: language,
       },
     });
   }
@@ -116,7 +180,7 @@ export class ProblemControllerService {
   ): CancelablePromise<BaseResponseProblemEditVO> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/problem/get/detail/{pid}",
+      url: "/api/problem/get/detail/{pid}",
       path: {
         pid: pid,
       },

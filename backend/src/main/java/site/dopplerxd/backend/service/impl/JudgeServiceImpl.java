@@ -14,6 +14,7 @@ import site.dopplerxd.backend.model.dto.judge.JudgeQueryDto;
 import site.dopplerxd.backend.model.enmus.JudgeSubmitLanguage;
 import site.dopplerxd.backend.model.entity.Judge;
 import site.dopplerxd.backend.model.entity.Problem;
+import site.dopplerxd.backend.model.vo.JudgeSummaryVO;
 import site.dopplerxd.backend.model.vo.JudgeVO;
 import site.dopplerxd.backend.model.vo.ProblemSummaryVO;
 import site.dopplerxd.backend.service.JudgeService;
@@ -41,15 +42,10 @@ public class JudgeServiceImpl extends ServiceImpl<JudgeMapper, Judge>
         if (judge == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+        System.out.println("checking");
 
-        Long cid = judge.getCid();
-        // todo: 比赛功能实现
-        if (cid != null && cid != 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "比赛功能尚未实现");
-        }
-
-        Long pid = judge.getPid();
-        Problem problem = problemMapper.selectById(pid);
+        Long id = judge.getPid();
+        Problem problem = problemMapper.selectById(id);
         ThrowUtils.throwIf(problem == null, ErrorCode.PARAMS_ERROR, "题目不存在");
 
         JudgeSubmitLanguage language = JudgeSubmitLanguage.getEnumByValue(judge.getLanguage());
@@ -58,31 +54,61 @@ public class JudgeServiceImpl extends ServiceImpl<JudgeMapper, Judge>
         if (judge.getCode().length() > 100000) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "代码长度超过限制");
         }
+        System.out.println("judge: " + judge);
     }
 
     // TODO: 测评结果条件查询
     @Override
-    public JSONObject getJudgeList(JudgeQueryDto queryDto, String userId) {
-        int current = queryDto.getCurrent();
+    public JSONObject getJudgeList(JudgeQueryDto queryDto) {
+        System.out.println("queryDto: " + queryDto);
+        int current = queryDto.getCurrent() > 0 ? queryDto.getCurrent() : 1; // 默认查第一页
         Long pid = queryDto.getPid();
-        Long cid = queryDto.getCid();
         String username = queryDto.getUsername();
         Integer status = queryDto.getStatus();
         String language = queryDto.getLanguage();
 
+        // 构建查询条件
+        QueryWrapper<Judge> queryWrapper = new QueryWrapper<>();
+        if (pid != null) {
+            queryWrapper.eq("pid", pid);
+        }
+        if (username != null &&!username.isEmpty()) {
+            queryWrapper.eq("username", username);
+        }
+        if (status != null) {
+            queryWrapper.eq("status", status);
+        }
+        if (language != null &&!language.isEmpty()) {
+            queryWrapper.eq("language", language);
+        }
+
         IPage<Judge> judgePage = new Page<>(current, 30);
-        List<Judge> judges = this.page(judgePage).getRecords();
-        List<JudgeVO> items = new LinkedList<>();
+        IPage<Judge> judgePageResult = this.page(judgePage, queryWrapper);
+        List<Judge> judges = judgePageResult.getRecords();
+        List<JudgeSummaryVO> items = new LinkedList<>();
+
         for (Judge judge : judges) {
-            JudgeVO judgeVO = new JudgeVO();
-            BeanUtils.copyProperties(judge, judgeVO);
-            items.add(judgeVO);
+            JudgeSummaryVO judgeSummaryVO = new JudgeSummaryVO();
+            BeanUtils.copyProperties(judge, judgeSummaryVO);
+            judgeSummaryVO.setSubmitId(judge.getSubmitId().toString()); // 避免前端因为bigint导致精度丢失
+            items.add(judgeSummaryVO);
         }
 
         JSONObject res = new JSONObject();
         res.set("judges", items);
         res.set("total", items.size());
         return res;
+    }
+
+    @Override
+    public JudgeVO getJudgeDetailById(Long id, String userId) {
+        Judge judge = this.getById(id);
+        ThrowUtils.throwIf(judge == null, ErrorCode.NOT_FOUND_ERROR, "评测记录不存在");
+        ThrowUtils.throwIf(judge.getShare() == 0
+                && !judge.getUid().equals(userId), ErrorCode.NO_AUTH_ERROR, "作者未公开代码");
+        JudgeVO judgeVO = new JudgeVO();
+        BeanUtils.copyProperties(judge, judgeVO);
+        return judgeVO;
     }
 }
 

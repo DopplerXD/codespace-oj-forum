@@ -6,10 +6,8 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.dopplerxd.backend.common.BaseResponse;
@@ -17,17 +15,25 @@ import site.dopplerxd.backend.common.ErrorCode;
 import site.dopplerxd.backend.common.ResultUtils;
 import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.exception.ThrowUtils;
+import site.dopplerxd.backend.judge.DoJudgeService;
+import site.dopplerxd.backend.model.dto.judge.JudgeQueryDto;
+import site.dopplerxd.backend.model.dto.judge.JudgeSubmitDto;
 import site.dopplerxd.backend.model.dto.problem.ProblemCreateDto;
 import site.dopplerxd.backend.model.dto.problem.ProblemDeleteDto;
 import site.dopplerxd.backend.model.dto.problem.ProblemQueryDto;
 import site.dopplerxd.backend.model.dto.problem.ProblemUpdateDto;
+import site.dopplerxd.backend.model.enmus.JudgeSubmitLanguage;
+import site.dopplerxd.backend.model.entity.Judge;
 import site.dopplerxd.backend.model.entity.Problem;
+import site.dopplerxd.backend.model.vo.JudgeVO;
 import site.dopplerxd.backend.model.vo.ProblemEditVO;
 import site.dopplerxd.backend.model.vo.ProblemVO;
+import site.dopplerxd.backend.service.JudgeService;
 import site.dopplerxd.backend.service.ProblemService;
 import site.dopplerxd.backend.utils.JwtUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author: <a href="https://github.com/DopplerXD">doppleryxc</a>
@@ -40,6 +46,12 @@ public class ProblemController {
 
     @Resource
     private ProblemService problemService;
+
+    @Resource
+    private JudgeService judgeService;
+
+    @Resource
+    private DoJudgeService doJudgeService;
 
     /**
      * 创建题目
@@ -192,7 +204,7 @@ public class ProblemController {
      * @param request 返回List<problems>、total、pages
      * @return
      */
-    @GetMapping("/list")
+    @GetMapping("/get/problem/list")
     public BaseResponse<JSONObject> problemGetList(
             @RequestParam(value = "current", defaultValue = "1", required = false) int current,
             @RequestParam(value = "difficulty", required = false) Integer difficulty,
@@ -205,5 +217,91 @@ public class ProblemController {
         }
         ProblemQueryDto queryDto = new ProblemQueryDto(current, difficulty, tags, keyword);
         return ResultUtils.success(problemService.getProblemList(queryDto, userId));
+    }
+
+    /**
+     * 提交判题
+     *
+     * @param judgeSubmitDto
+     * @param request
+     * @return
+     */
+    @PostMapping("/submit/judge")
+    public BaseResponse<Long> judgeSubmit(@Validated @RequestBody JudgeSubmitDto judgeSubmitDto, HttpServletRequest request) {
+        if (judgeSubmitDto == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        System.out.println("judgeSubmit success " + judgeSubmitDto);
+
+        Judge judge = new Judge();
+        BeanUtil.copyProperties(judgeSubmitDto, judge);
+        System.out.println("judge: " + judge);
+
+        String userId = JwtUtils.getUserIdFromRequest(request);
+        if (userId == null) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+
+        System.out.println("before into validJudge");
+        judgeService.validJudge(judge);
+        System.out.println("validJudge success " + judge.getPid());
+
+        judge.setUsername(JwtUtils.getUsernameFromRequest(request));
+        judge.setUid(JwtUtils.getUserIdFromRequest(request));
+        judge.setLength(judge.getCode().length());
+        judge.setLanguage(Objects.requireNonNull(JudgeSubmitLanguage.getEnumByValue(judge.getLanguage())).getLanguage());
+        judge.setStatus(-9);
+        boolean result = judgeService.save(judge);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        long newJudgeId = judge.getSubmitId();
+        System.out.println("newJudgeId: " + newJudgeId);
+        // TODO: 执行判题服务
+        doJudgeService.doJudge(newJudgeId);
+        return ResultUtils.success(newJudgeId);
+    }
+
+    /**
+     * 根据ID获取提交详情
+     *
+     * @param judgeId
+     * @return
+     */
+    @GetMapping("/get/judge/{judgeId}")
+    public BaseResponse<JudgeVO> judgeGet(@PathVariable("judgeId") long judgeId, HttpServletRequest request) {
+        String userId = JwtUtils.getUserIdFromRequest(request);
+        if (userId == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        JudgeVO judgeVO = judgeService.getJudgeDetailById(judgeId, userId);
+        return ResultUtils.success(judgeVO);
+    }
+
+    /**
+     * 获取提交列表
+     *
+     * @param current
+     * @param problemId
+     * @param username
+     * @param status
+     * @param language
+     * @param request
+     * @return
+     */
+    @GetMapping("/get/judge/list")
+    public BaseResponse<JSONObject> judgeGetList(
+            @RequestParam(value = "current", defaultValue = "1", required = false) int current,
+            @RequestParam(value = "problemId", required = false) Long problemId,
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "language", required = false) String language,
+            HttpServletRequest request) {
+        JudgeQueryDto queryDto = new JudgeQueryDto();
+        queryDto.setCurrent(current);
+        queryDto.setPid(problemId);
+        queryDto.setUsername(username);
+        queryDto.setStatus(status);
+        queryDto.setLanguage(language);
+
+        return ResultUtils.success(judgeService.getJudgeList(queryDto));
     }
 }

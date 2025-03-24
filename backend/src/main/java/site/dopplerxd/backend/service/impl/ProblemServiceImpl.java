@@ -71,13 +71,10 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem>
 
     @Override
     public JSONObject getProblemList(ProblemQueryDto queryDto, String userId) {
-//        System.out.println("tags: " + queryDto.getTags());
-
         int current = queryDto.getCurrent() > 0 ? queryDto.getCurrent() : 1; // 默认查第一页
         Integer difficulty = queryDto.getDifficulty();
         List<String> tags = queryDto.getTags();
         String keyword = queryDto.getKeyword();
-        System.out.println("current: " + current);
 
         // 构建查询条件
         QueryWrapper<Problem> queryWrapper = new QueryWrapper<>();
@@ -87,7 +84,6 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem>
             queryWrapper.eq("difficulty", difficulty);
         }
         if (tags!= null &&!tags.isEmpty()) {
-//            queryWrapper.like("tags", tags);
             for (int i = 0; i < tags.size(); i++) {
                 if (i > 0) {
                     queryWrapper.or();
@@ -98,9 +94,6 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem>
         if (keyword != null && !keyword.isEmpty()) {
             queryWrapper.like("title", keyword).or().like("description", keyword);
         }
-
-        // 输出查询条件
-//        System.out.println("QueryWrapper: " + queryWrapper.getSqlSegment());
 
         IPage<Problem> problemPage = new Page<>(current, 30);
         IPage<Problem> pageResult = this.page(problemPage, queryWrapper);

@@ -35,7 +35,7 @@ export class UserControllerService {
   public static userLogout(): CancelablePromise<BaseResponseString> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/user/logout",
+      url: "/api/user/logout",
     });
   }
 
@@ -49,7 +49,7 @@ export class UserControllerService {
   ): CancelablePromise<BaseResponseMapStringObject> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/user/login",
+      url: "/api/user/login",
       body: requestBody,
       mediaType: "application/json",
     });
@@ -62,7 +62,7 @@ export class UserControllerService {
   public static getLoginUser(): CancelablePromise<BaseResponseLoginUserVO> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/user/get/login",
+      url: "/api/user/get/login",
     });
   }
 }

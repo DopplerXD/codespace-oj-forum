@@ -33,11 +33,6 @@ public class JudgeQueryDto implements Serializable {
     private Long pid;
 
     /**
-     * 比赛id，非比赛题目默认为0
-     */
-    private Long cid;
-
-    /**
      * 用户名
      */
     private String username;

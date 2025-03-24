@@ -26,17 +26,17 @@ public class Judge implements Serializable {
     @TableField(value = "pid")
     private Long pid;
 
+//    /**
+//     * 题目自定义id
+//     */
+//    @TableField(value = "problem_id")
+//    private String pid;
+
     /**
      * 用户id
      */
     @TableField(value = "uid")
     private String uid;
-
-    /**
-     * 比赛id，非比赛题目默认为0
-     */
-    @TableField(value = "cid")
-    private Long cid;
 
     /**
      * 用户名
@@ -72,13 +72,13 @@ public class Judge implements Serializable {
      * 运行时间(ms)
      */
     @TableField(value = "time")
-    private Integer time;
+    private Long time;
 
     /**
      * 运行内存（kb）
      */
     @TableField(value = "memory")
-    private Integer memory;
+    private Long memory;
 
     /**
      * IO判题则不为空
@@ -103,12 +103,6 @@ public class Judge implements Serializable {
      */
     @TableField(value = "language")
     private String language;
-
-    /**
-     * 比赛中题目排序id，非比赛题目默认为0
-     */
-    @TableField(value = "cpid")
-    private Long cpid;
 
     /**
      * vjudge判题在其它oj的提交id

@@ -4,6 +4,7 @@ import cn.hutool.json.JSONObject;
 import site.dopplerxd.backend.model.dto.judge.JudgeQueryDto;
 import site.dopplerxd.backend.model.entity.Judge;
 import com.baomidou.mybatisplus.extension.service.IService;
+import site.dopplerxd.backend.model.vo.JudgeVO;
 
 /**
 * @author doppleryxc
@@ -14,6 +15,7 @@ public interface JudgeService extends IService<Judge> {
 
     public void validJudge(Judge judge);
 
-    public JSONObject getJudgeList(JudgeQueryDto judgeQueryDto, String userId);
+    public JSONObject getJudgeList(JudgeQueryDto judgeQueryDto);
 
+    public JudgeVO getJudgeDetailById(Long id, String userId);
 }

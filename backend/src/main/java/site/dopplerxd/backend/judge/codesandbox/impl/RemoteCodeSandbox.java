@@ -1,5 +1,10 @@
 package site.dopplerxd.backend.judge.codesandbox.impl;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
+import site.dopplerxd.backend.common.ErrorCode;
+import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.judge.codesandbox.CodeSandbox;
 import site.dopplerxd.backend.judge.codesandbox.model.ExecuteCodeRequest;
 import site.dopplerxd.backend.judge.codesandbox.model.ExecuteCodeResponse;
@@ -13,8 +18,18 @@ import site.dopplerxd.backend.judge.codesandbox.model.ExecuteCodeResponse;
 public class RemoteCodeSandbox implements CodeSandbox {
 
     @Override
-    public ExecuteCodeResponse executeCode(ExecuteCodeRequest request) {
+    public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         System.out.println("远程代码沙箱");
-        return null;
+        String url = "http://localhost:8090/executeCode";
+        String json = JSONUtil.toJsonStr(executeCodeRequest);
+        String responseStr = HttpUtil.createPost(url)
+                .header("auth", "secretKey")
+                .body(json)
+                .execute()
+                .body();
+        if (StrUtil.isBlank(responseStr)) {
+            throw new BusinessException(ErrorCode.API_REQUEST_ERROR, "executeCode remoteSandbox error, message = " + responseStr);
+        }
+        return JSONUtil.toBean(responseStr, ExecuteCodeResponse.class);
     }
 }
