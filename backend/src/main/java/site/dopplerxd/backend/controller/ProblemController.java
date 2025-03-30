@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,11 @@ public class ProblemController {
 
     @Resource
     private DoJudgeService doJudgeService;
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    private static final String PROBLEM_CACHE_KEY = "codespace:cache:problemvo:";
 
     /**
      * 创建题目
@@ -124,6 +130,8 @@ public class ProblemController {
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "修改题目失败");
         }
+        // 如果缓存中有这个题目，则删除缓存
+        stringRedisTemplate.delete(PROBLEM_CACHE_KEY + problem.getProblemId());
         return ResultUtils.success(true);
     }
 

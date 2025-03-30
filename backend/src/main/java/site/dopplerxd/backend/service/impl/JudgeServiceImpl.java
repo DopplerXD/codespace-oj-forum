@@ -60,7 +60,7 @@ public class JudgeServiceImpl extends ServiceImpl<JudgeMapper, Judge>
     // TODO: 测评结果条件查询
     @Override
     public JSONObject getJudgeList(JudgeQueryDto queryDto) {
-        System.out.println("queryDto: " + queryDto);
+//        System.out.println("queryDto: " + queryDto);
         int current = queryDto.getCurrent() > 0 ? queryDto.getCurrent() : 1; // 默认查第一页
         Long pid = queryDto.getPid();
         String username = queryDto.getUsername();
