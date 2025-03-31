@@ -1,11 +1,14 @@
 package site.dopplerxd.backend.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import site.dopplerxd.backend.common.ErrorCode;
@@ -20,6 +23,7 @@ import site.dopplerxd.backend.utils.JwtUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author doppleryxc
@@ -30,7 +34,13 @@ import java.util.Map;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
     private static final String SALT = "valorant";
+
+    private static final String USER_LOGOUT_CACHE_KEY = "codespace:cache:userlogout:";
+
 
     @Override
     public void userRegister(UserRegisterDto userRegisterDto, HttpServletRequest request) {
@@ -111,7 +121,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public User getLoginUser(HttpServletRequest request) {
-        if (JwtUtils.verify(JwtAuthenticationTokenFilter.getJwtFromRequest(request))) {
+        String token = JwtAuthenticationTokenFilter.getJwtFromRequest(request);
+        if (JwtUtils.verify(token)) {
+            // 判断token是否在Redis黑名单中
+            String tokenCache = stringRedisTemplate.opsForValue().get(USER_LOGOUT_CACHE_KEY + token);
+            if (StrUtil.isNotBlank(tokenCache)) {
+                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户已注销");
+            }
             String id = JwtUtils.getUserIdFromRequest(request);
             User user = this.getById(id);
             if (user == null) {
@@ -146,6 +162,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public void userLogout(String token) {
-        // TODO 添加到Redis黑名单
+        // 添加token到Redis黑名单，过期时间为勾选自动登录的token时间
+        stringRedisTemplate.opsForValue().set(USER_LOGOUT_CACHE_KEY + token, "1", 7, TimeUnit.DAYS);
     }
 }
