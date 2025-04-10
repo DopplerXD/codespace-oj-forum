@@ -1,10 +1,13 @@
 package site.dopplerxd.backend.config.filter;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWT;
+import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import site.dopplerxd.backend.common.ErrorCode;
 import site.dopplerxd.backend.common.ResultUtils;
+import site.dopplerxd.backend.exception.BusinessException;
 import site.dopplerxd.backend.utils.JwtUtils;
 
 import java.io.IOException;
@@ -33,8 +37,14 @@ import java.util.Enumeration;
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
     private static final String TOKEN_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
+
+    private static final String USER_LOGOUT_CACHE_KEY = "codespace:cache:userlogout:";
+
 
     private final UserDetailsService userDetailsService;
 
@@ -63,9 +73,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         // 从请求头中获取 JWT
         String token = getJwtFromRequest(request);
-//        System.out.println("JwtAuthenticationTokenFilter - " + token);
 
         if (StringUtils.isNotBlank(token) && JwtUtils.verify(token)) {
+
+            // 判断token是否在Redis黑名单中
+            String tokenCache = stringRedisTemplate.opsForValue().get(USER_LOGOUT_CACHE_KEY + token);
+            if (StrUtil.isNotBlank(tokenCache)) {
+                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户已注销");
+            }
+
             try {
                 // 解析 JWT 中的用户账号和角色信息
                 String username = JWT.of(token).getPayload("username").toString();

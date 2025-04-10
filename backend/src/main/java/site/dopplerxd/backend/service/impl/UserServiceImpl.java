@@ -123,11 +123,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User getLoginUser(HttpServletRequest request) {
         String token = JwtAuthenticationTokenFilter.getJwtFromRequest(request);
         if (JwtUtils.verify(token)) {
-            // 判断token是否在Redis黑名单中
-            String tokenCache = stringRedisTemplate.opsForValue().get(USER_LOGOUT_CACHE_KEY + token);
-            if (StrUtil.isNotBlank(tokenCache)) {
-                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户已注销");
-            }
+//            // 判断token是否在Redis黑名单中
+//            String tokenCache = stringRedisTemplate.opsForValue().get(USER_LOGOUT_CACHE_KEY + token);
+//            if (StrUtil.isNotBlank(tokenCache)) {
+//                throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户已注销");
+//            }
             String id = JwtUtils.getUserIdFromRequest(request);
             User user = this.getById(id);
             if (user == null) {

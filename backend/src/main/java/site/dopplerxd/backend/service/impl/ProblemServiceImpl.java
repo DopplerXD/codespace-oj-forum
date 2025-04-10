@@ -104,7 +104,7 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper, Problem>
             }
 
             // 5. 如果数据库中存在，则将查询结果存入redis，并设置超时时间
-            problemVO = null;
+            problemVO = new ProblemVO();
             BeanUtils.copyProperties(problem, problemVO);
             stringRedisTemplate.opsForValue().set(PROBLEM_CACHE_KEY + pid, JSONUtil.toJsonStr(problemVO), 60L, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
