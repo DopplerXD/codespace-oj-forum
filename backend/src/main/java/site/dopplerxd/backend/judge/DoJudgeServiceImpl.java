@@ -114,8 +114,8 @@ public class DoJudgeServiceImpl implements DoJudgeService {
         Long time = executeCodeResponse.getTime();
         Long memory = executeCodeResponse.getMemory();
 
+        // TODO: 使用策略模式，针对不同语言执行不同判题逻辑，如Java时间限制是C++的2倍
         // 对比输出与答案
-
         judgeUpdate.setScore(0);
         if (status == 2) {
             judgeUpdate.setStatus(JudgeSubmitStatus.STATUS_SYSTEM_ERROR.getCode());

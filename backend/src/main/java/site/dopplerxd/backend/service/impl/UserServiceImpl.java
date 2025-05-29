@@ -37,7 +37,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    private static final String SALT = "valorant";
+    private static final String SALT = "algorithm-space-39vgms8fmsi5sf";
 
     private static final String USER_LOGOUT_CACHE_KEY = "codespace:cache:userlogout:";
 

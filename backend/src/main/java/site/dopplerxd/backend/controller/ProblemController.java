@@ -263,7 +263,6 @@ public class ProblemController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         long newJudgeId = judge.getSubmitId();
         System.out.println("newJudgeId: " + newJudgeId);
-        // TODO: 执行判题服务
         doJudgeService.doJudge(newJudgeId);
         return ResultUtils.success(newJudgeId);
     }
